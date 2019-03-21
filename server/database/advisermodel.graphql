@@ -1,0 +1,15 @@
+type adviserUser {
+  id: ID! @unique
+  name: String!
+  email: String! @unique
+  password: String!
+  adviserprofile: adviserProfile
+  }
+
+
+type adviserProfile {
+  phone: String! @unique
+  adviserCompanyName: String
+  adviseruser: adviserUser!
+}
+
