@@ -34,7 +34,6 @@ const query = {
           return order
         }
   }
-
 }
 
 module.exports = { query }
