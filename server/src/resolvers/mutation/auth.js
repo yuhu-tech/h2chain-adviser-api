@@ -6,7 +6,7 @@ const {getUserId} = require('../../utils')
 const auth = {
   async signup(parent, args, ctx, info) {
     const password = await bcrypt.hash(args.password, 10)
-    const user = await ctx.prisma.createUser(
+    const user = await ctx.prismaHr.createUser(
       { ...args, password },
     )
     return {
@@ -16,7 +16,7 @@ const auth = {
   },
 
   async login(parent, { email, password }, ctx, info) {
-    const users = await ctx.prisma.users({ where: { email } })
+    const users = await ctx.prismaHr.users({ where: { email } })
     if (!users) {
       throw new Error(`No such user found for email: ${email}`)
     }
@@ -43,7 +43,7 @@ const auth = {
     const id = getUserId(ctx)
     console.log(id);
     console.log(args)
-    const users = await ctx.prisma.users({where:{id}})
+    const users = await ctx.prismaHr.users({where:{id}})
       if (!users){
        throw new Error(`No such user found for email: ${email}`)
        }
@@ -53,7 +53,7 @@ const auth = {
       }
       else {
         const newPassword = await bcrypt.hash(args.newpassword, 10)
-        const returning = await ctx.prisma.updateUser(
+        const returning = await ctx.prismaHr.updateUser(
           {
             data:{password: newPassword},
             where:{id: users[0].id}
