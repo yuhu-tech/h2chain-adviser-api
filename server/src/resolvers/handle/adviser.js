@@ -103,6 +103,7 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
             obj['adviser'] = adviser
             obj['hotel'] = hotel
             obj['postorder'] = postorder
+            obj['state'] = res.orderOrigins[i].status
 
             // 查询当前已报名的男女人数
             // 调用queryPTOfOrder()接口查询，某个订单下已报名PT的总人数

@@ -65,10 +65,10 @@ input InputPostorder{
 
 type Postorder{
   orderid: String!
-  salary: Int!
-  workcontent:String!
+  salary: Int
+  workcontent:String
   attention:String
-  isfloat:Int!
+  isfloat:Int
 }
 
 type Mutation {
