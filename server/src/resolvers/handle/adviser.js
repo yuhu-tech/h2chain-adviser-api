@@ -24,6 +24,7 @@ function queryPt(request) {
 
 async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
     try {
+       console.log("orderid is "+orderid)
        var request = new messages.QueryRequest();
        //to tranfer args to grpc
        if (orderid != null && orderid != undefined){
@@ -103,7 +104,7 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
             obj['adviser'] = adviser
             obj['hotel'] = hotel
             obj['postorder'] = postorder
-            obj['state'] = res.orderOrigins[i].status
+            obj['state'] = res.orderOrigins[i].status-1
 
             // 查询当前已报名的男女人数
             // 调用queryPTOfOrder()接口查询，某个订单下已报名PT的总人数

@@ -18,7 +18,6 @@ const query = {
 
   async search (parent, args, ctx, info){
     const id = getUserId(ctx)
-    console.log(id)
     return  handles.AdviserGetOrderList(ctx,id,args.orderid,args.state,args.datetime)  
 }
 }
