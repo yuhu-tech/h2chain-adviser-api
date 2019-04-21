@@ -21,14 +21,14 @@ function queryPt(request) {
     })
 }
 
-
-async function GetPTofOrder (ctx,orderid){
-  
-
-
-
-
-
+//this function may not be uesd, I wrote it down here in AdviserGetOrderList
+async function GetPtofOrder (ctx,orderid){
+    var client  = new services.QueryOrderClient('127.0.0.1:50051',grpc.credentials.createInsecure());
+    var request = new messages.QueryPTRequest();
+        request.setOrderid(orderid);
+    client.queryPTOfOrder(request,function(err,response){
+        console.log(response.array[0])
+    });
 }
 
 
@@ -118,25 +118,38 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
 
             // 查询当前已报名的男女人数
             // 调用queryPTOfOrder()接口查询，某个订单下已报名PT的总人数
+            var pts = []
             try {
                 var request = new messages.QueryPTRequest();
                 request.setOrderid(res.orderOrigins[i].id);
                 request.setPtstatus(1);
                 var response = await queryPt(request)
                 obj['countyet'] = response.array[0].length
-                ptid = response.array[0][0][0]
-                var  personalmsgs  = await ctx.prismaClient.personalmsgs({where:{user:{id:ptid}}})
                 //initial obj[maleyet] and obj[femaleyet]
-                if (obj['maleyet'] == undefined){obj['maleyet'] = 0}
-                if (obj['femaleyet'] == undefined){obj['femaleyet']=0}
+                if (obj['maleyet'] == undefined) {obj['maleyet'] = 0}
+                if (obj['femaleyet'] == undefined) {obj['femaleyet'] = 0}
+                for (var k = 0; k < obj['countyet']; k++){
+                var ptid = response.array[0][k][0]
+                var personalmsgs  = await ctx.prismaClient.personalmsgs({where:{user:{id:ptid}}})
                 // to judge if there is a male or female
                 if (personalmsgs[0].gender == 1)  {
-                  obj['maleyet']= obj['maleyet']+1 
+                  obj['maleyet']= obj['maleyet'] + 1 
                 } else {
-                  obj['femaleyet'] == obj['femaleyet']+1
+                  obj['femaleyet'] == obj['femaleyet'] + 1
                 }
                 //TODO
-                //to retrieve other pt message here  
+                //to retrieve other pt message here
+                var pt = {}
+                pt['id'] = ptid
+                pt['name'] = personalmsgs[0].name
+                pt['idnumber'] = personalmsgs[0].idnumber
+                pt['gender'] = personalmsgs[0].gender
+                pt['wechatname'] = "mocked wechat id"
+                pt['phonenumber'] = personalmsgs[0].phonenumber
+                pt['worktimes'] = "mocked worktimes"
+                pts.push(pt)  
+              }
+                obj['pt'] = pts  
             } catch (error) {
                 throw error
             }
@@ -152,4 +165,4 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
     }
 }
 
-module.exports = {queryOrder,queryPt,AdviserGetOrderList}
+module.exports = {queryOrder,queryPt,AdviserGetOrderList,GetPtofOrder}

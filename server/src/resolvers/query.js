@@ -7,6 +7,7 @@ const grpc = require('../../../grpc/examples/node/node_modules/grpc')
 
 const query = {
   async me (parent, args, ctx, info) {
+    console.log("here is a log")
     const id = getUserId(ctx)
     console.log(id)
     const users = await ctx.prismaHr.users({where:{id}})
@@ -25,13 +26,9 @@ const query = {
   },
    
   async searchptoforder (parent,args,ctx,info){
-    var client  = new services.QueryOrderClient('127.0.0.1:50051',grpc.credentials.createInsecure());
-    var request = new messages.QueryPTRequest();
-        request.setOrderid(args.orderid);
-    client.queryPTOfOrder(request,function(err,response){
-        console.log(response.array[0][0])
-    });
-  }
+      console.log(args)
+      return  handles.GetPtofOrder(ctx,args.orderid)
+    }
 }
 
 module.exports = { query }
