@@ -31,6 +31,17 @@ maleyet:Int!
 femaleyet:Int!
 countyet:Int!
 postorder:Postorder
+pt:[Pt]
+}
+
+type Pt{
+id : ID
+name : String
+idnumber : String
+gender :Int
+wechatname : String
+phonenumber : String
+worktimes: Int
 }
 
 type Hotel{
