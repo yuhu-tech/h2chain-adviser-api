@@ -1,6 +1,7 @@
 type Query {
   me: User!
   search(orderid: String,state:Int,datetime:Int):[Order]
+  searchptoforder(orderid:String):[PtPayload]
 }
 
 type Adviser{
@@ -8,6 +9,16 @@ name:String!
 phone:String!
 companyname:String!
 introduction:String
+}
+
+type PtPayload{
+ptid:String
+name:String
+idnumber:String
+gender:Int
+wechatname:String
+phonenumber:String
+worktimes:Int
 }
 
 type Order {

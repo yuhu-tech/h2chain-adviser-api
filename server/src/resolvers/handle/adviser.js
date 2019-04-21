@@ -22,9 +22,20 @@ function queryPt(request) {
 }
 
 
+async function GetPTofOrder (ctx,orderid){
+  
+
+
+
+
+
+}
+
+
 async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
     try {
        console.log("orderid is "+orderid)
+       console.log("adviserid is "+ adviserid)
        var request = new messages.QueryRequest();
        //to tranfer args to grpc
        if (orderid != null && orderid != undefined){
@@ -45,7 +56,6 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
         var orderList = []
         for (var i = 0; i < res.orderOrigins.length; i++) {
             var obj = {}
-
             var modifiedorder = []
             for (var j = 0; j < res.orderOrigins[i].orderHotelModifies.length; j++) {
                 var modifiedorderObj = {}
@@ -111,14 +121,22 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
             try {
                 var request = new messages.QueryPTRequest();
                 request.setOrderid(res.orderOrigins[i].id);
-                request.setPtid('');
-                request.setRegistrationchannel('');
                 request.setPtstatus(1);
                 var response = await queryPt(request)
                 obj['countyet'] = response.array[0].length
-                // ptid  response.array[0][0][0]
-                obj['maleyet'] = 2
-                obj['femaleyet'] = 1
+                ptid = response.array[0][0][0]
+                var  personalmsgs  = await ctx.prismaClient.personalmsgs({where:{user:{id:ptid}}})
+                //initial obj[maleyet] and obj[femaleyet]
+                if (obj['maleyet'] == undefined){obj['maleyet'] = 0}
+                if (obj['femaleyet'] == undefined){obj['femaleyet']=0}
+                // to judge if there is a male or female
+                if (personalmsgs[0].gender == 1)  {
+                  obj['maleyet']= obj['maleyet']+1 
+                } else {
+                  obj['femaleyet'] == obj['femaleyet']+1
+                }
+                //TODO
+                //to retrieve other pt message here  
             } catch (error) {
                 throw error
             }
