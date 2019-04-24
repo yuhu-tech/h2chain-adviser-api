@@ -21,9 +21,15 @@ const query = {
 
   async mytemplate (parent,args,ctx,info) { 
     const id  = getUserId(ctx)
-    const templates  = await ctx.prismaHr.templates({where:{userid:id}})
-    return templates
-   },
+    const workcontents = await ctx.prismaHr.workcontents({where:{userid:id}})
+    const attentions  =  await ctx.prismaHr.attentions({where:{userid:id}})
+    var result  = {
+    workcontents : workcontents,
+    attentions : attentions
+    }
+    console.log(result)
+    return result   
+},
 
   async search (parent, args, ctx, info){
     const id = getUserId(ctx)
@@ -31,8 +37,8 @@ const query = {
   },
    
   async searchptoforder (parent,args,ctx,info){
-      console.log(args)
-      return  handles.GetPtofOrder(ctx,args.orderid)
+    console.log(args)
+    return  handles.GetPtofOrder(ctx,args.orderid)
   }
 }
 

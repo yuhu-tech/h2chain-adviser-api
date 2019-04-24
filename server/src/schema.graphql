@@ -10,14 +10,24 @@ type Mutation {
   login(email: String!, password: String!,jscode:String!): AuthPayload!
   changepassword(oldpassword: String!, newpassword: String!): CPwdPayload!
   postorder(postorder:InputPostorder!):OrderPayload!
-  createtemplate(workcontent:String, attention:String): Boolean!
-  deletetemplate(templateid:String!):Boolean!
-  modifytemplate(templateid:String!,workcontent:String,attention:String):Boolean!
+  createtemplate(type:String!,value:String): Boolean!
+  deletetemplate(type:String!,id:String!):Boolean!
+  modifytemplate(type:String!,id:String!,value:String!):Boolean!
 }
 
 type Template{
-  workcontents : [String]
-  attentions : [String]
+  workcontents:[Workcontent]
+  attentions:[Attention] 
+}
+
+type Workcontent{
+id:ID
+workcontent : String
+}
+
+type Attention{
+id:ID
+attention : String
 }
 
 type Adviser{

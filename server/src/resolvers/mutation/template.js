@@ -7,14 +7,12 @@ const template = {
   async createtemplate(parent, args, ctx, info) {
     try{
     const id = getUserId(ctx)
-    console.log(ctx)
-    var template = await ctx.prismaHr.createTemplate(
-      {
-         userid :  id, 
-         workcontent: args.workcontent,
-         attention: args.attention
-      }
-    )
+    if (args.type == 'workcontent'){
+    var workcontent = await ctx.prismaHr.createWorkcontent({userid : id , workcontent: args.value})
+    }
+    else {
+    var attention = await ctx.prismaHr.createAttention({userid : id , attention : args.value})
+    }
       return true
     } catch (error){
       throw (error)
@@ -23,10 +21,14 @@ const template = {
 
   async deletetemplate(parent, args, ctx, info){
     try{
-     var template = await ctx.prismaHr.deleteTemplate(
-       {id : args.templateid}
-     )  
-       return true
+     const id = getUsedId(ctx)
+     if (args.type == 'workcontent'){
+     var workcontent = await ctx.prismaHr.deleteWorkcontent({id : args.id})
+     }
+     else {
+     var attention = await ctx.prismaHr.deleteAttention({id : args.id})
+     }
+      return true
    } catch (error) {
      throw (error)
    }
@@ -34,15 +36,13 @@ const template = {
 
   async modifytemplate(parent, args, ctx, info){
     try{
-      var template = await ctx.prismaHr.updateTemplate(
-      {
-        data:{
-         workcontent : args.workcontent,
-         attention : args.attention
-         },
-        where:{ id : args.templateid} 
-      } 
-      )
+      const id = getUserId(ctx)
+      if (args.type == 'workcontent'){
+      var workcontent = await ctx.prismaHr.updateWorkcontent({data:{workcontent:args.value},where:{id:args.id}})
+      }
+      else {
+      var attention = await ctx.prismaHr.updateAttention({data:{attention:args.value},where:{id:args.id}})
+      }
        return true
       } catch (error){
         throw (error)
