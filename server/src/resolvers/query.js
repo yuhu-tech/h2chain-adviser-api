@@ -7,17 +7,22 @@ const grpc = require('../../../grpc/examples/node/node_modules/grpc')
 
 const query = {
   async me (parent, args, ctx, info) {
-    console.log("here is a log")
     const id = getUserId(ctx)
-    console.log(id)
     const users = await ctx.prismaHr.users({where:{id}})
     const profiles = await ctx.prismaHr.profiles({where:{user:{id:id}}})
-    const result = {
+    var   result = {
       name:users[0].name,
       email:users[0].email,
+      phone:users[0].phone,
       profile:profiles[0]
     }
       return result
+   },
+
+  async mytemplate (parent,args,ctx,info) { 
+    const id  = getUserId(ctx)
+    const templates  = await ctx.prismaHr.templates({where:{userid:id}})
+    return templates
    },
 
   async search (parent, args, ctx, info){
@@ -28,7 +33,7 @@ const query = {
   async searchptoforder (parent,args,ctx,info){
       console.log(args)
       return  handles.GetPtofOrder(ctx,args.orderid)
-    }
+  }
 }
 
 module.exports = { query }

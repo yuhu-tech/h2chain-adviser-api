@@ -36,23 +36,26 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
     try {
        console.log("orderid is "+orderid)
        console.log("adviserid is "+ adviserid)
-       var request = new messages.QueryRequest();
+       console.log("datetime is "+ datetime)
+       console.log("state is "+state)
+       var request = new messages.QueryRequest()
        //to tranfer args to grpc
-       if (orderid != null && orderid != undefined){
+       if (orderid != null && orderid != undefined) {
          request.setOrderid(orderid)
-       }
-       if (adviserid != null && adviserid != undefined){
-         request.setAdviser(adviserid)
-       }
-       else if (datetime != null && datetime != undefined){
+       } 
+       else if (datetime != null && datetime != undefined) {
          request.setDate(datetime)
+       } 
+       else if (state != null && state != undefined) {
+         request.setStatus(state+1)
        }
-       else if (state != null && state != undefined){
-         request.setStatus(state)
+       else if (adviserid != null && adviserid != undefined && datetime == undefined && state == undefined ){
+         request.setAdviser(adviserid)
        }
         
         var response = await queryOrder(request);
         var res = JSON.parse(response.array[0])
+        console.log("res is ..."+ JSON.stringify(res))
         var orderList = []
         for (var i = 0; i < res.orderOrigins.length; i++) {
             var obj = {}

@@ -2,6 +2,22 @@ type Query {
   me: User!
   search(orderid: String,state:Int,datetime:Int):[Order]
   searchptoforder(orderid:String):[PtPayload]
+  mytemplate: Template
+}
+
+type Mutation {
+  signup(email: String!, password: String!, name: String!): AuthPayload!
+  login(email: String!, password: String!,jscode:String!): AuthPayload!
+  changepassword(oldpassword: String!, newpassword: String!): CPwdPayload!
+  postorder(postorder:InputPostorder!):OrderPayload!
+  createtemplate(workcontent:String, attention:String): Boolean!
+  deletetemplate(templateid:String!):Boolean!
+  modifytemplate(templateid:String!,workcontent:String,attention:String):Boolean!
+}
+
+type Template{
+  workcontents : [String]
+  attentions : [String]
 }
 
 type Adviser{
@@ -93,13 +109,6 @@ type Postorder{
   isfloat:Int
 }
 
-type Mutation {
-  signup(email: String!, password: String!, name: String!): AuthPayload!
-  login(email: String!, password: String!,jscode:String!): AuthPayload!
-  changepassword(oldpassword: String!, newpassword: String!): CPwdPayload!
-  postorder(postorder:InputPostorder!):OrderPayload!
-}
-
 type OrderPayload {
   orderid: String
   error: Boolean
@@ -120,7 +129,7 @@ type User {
   name:String!
   email: String!
   password:String!
-  profile:Profile
+  profile: Profile
 }
 
 type Profile{
