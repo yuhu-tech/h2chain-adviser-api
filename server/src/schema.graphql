@@ -6,7 +6,7 @@ type Query {
 }
 
 type Mutation {
-  signup(email: String!, password: String!, name: String!): AuthPayload!
+  signup(email: String!, password: String!, name: String!,phone:String!): AuthPayload!
   login(email: String!, password: String!,jscode:String!): AuthPayload!
   changepassword(oldpassword: String!, newpassword: String!): CPwdPayload!
   postorder(postorder:InputPostorder!):OrderPayload!
@@ -140,6 +140,7 @@ type User {
   email: String!
   password:String!
   profile: Profile
+  phone: String
 }
 
 type Profile{
