@@ -1,6 +1,5 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-const {need,orderbyorderid,orderbydate,order2,order3,user,orderpayload}= require('../mock')
 const {getUserId} = require('../../utils')
 
 const auth = {
@@ -15,18 +14,27 @@ const auth = {
     }
   },
 
-  async login(parent, { email, password }, ctx, info) {
+  async login(parent, { email, password, jscode }, ctx, info) {
     const users = await ctx.prismaHr.users({ where: { email } })
     if (!users) {
       throw new Error(`No such user found for email: ${email}`)
     }
     const user = users[0]
-    console.log(user)
     const valid = await bcrypt.compare(password, user.password)
     if (!valid) {
       throw new Error('Invalid password')
     }
-
+    //we will update wechat openid here
+    try {
+    wechat = await getOpenId(jscode,2)
+    const thisuser = await ctx.prismaHr.updateUser(
+      { data:{wechat:wechat},
+        where:{email:email}
+      }
+      )
+    } catch(error){
+      throw(error)
+    }
     return {
       token: jwt.sign({ userId: user.id }, 'jwtsecret123'),
       user
@@ -51,7 +59,9 @@ const auth = {
       if (!valid) {
          throw new Error ('Invalid Password')
       }
-      else {
+      else
+       { 
+       try {
         const newPassword = await bcrypt.hash(args.newpassword, 10)
         const returning = await ctx.prismaHr.updateUser(
           {
@@ -59,9 +69,13 @@ const auth = {
             where:{id: users[0].id}
           }
         )
+      } catch (error)
+         {
+           throw(error)
+         }
       }
       return{"error":false}
-  }
+  },
 }
 
 

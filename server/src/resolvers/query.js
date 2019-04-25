@@ -21,6 +21,7 @@ const query = {
 
   async mytemplate (parent,args,ctx,info) { 
     const id  = getUserId(ctx)
+    console.log(id)
     const workcontents = await ctx.prismaHr.workcontents({where:{userid:id}})
     const attentions  =  await ctx.prismaHr.attentions({where:{userid:id}})
     var result  = {
