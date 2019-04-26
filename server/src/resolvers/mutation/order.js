@@ -19,7 +19,19 @@ const order = {
     });
        var error = false
        return error
-  }
+  },
+
+  async modifyptoforder(parent,args,ctx,info){
+    var request = new messages.ModifyPtRequest();
+        request.setOrderid(args.orderid);       // OrderID 必传
+        request.setPtid(args.ptid);
+        request.setTargetstatus(2);                           // PT 目标状态 筛选条件，不同传 -1
+     // we will refuse anyone what ever his status is   
+     // request.setSourcestatus(1);                           // PT 原始状态  
+    client.modifyPTOfOrder(request,function(err,response){
+        console.log(response.array)
+    });
+  } 
 }
 
 module.exports = { order }
