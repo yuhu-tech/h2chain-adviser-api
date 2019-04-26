@@ -1,7 +1,7 @@
 type Query {
   me: User!
   search(orderid: String,state:Int,datetime:Int):[Order]
-  searchptoforder(orderid:String):[PtPayload]
+  searchptoforder(orderid:String):[Order]
   mytemplate: Template
 }
 
@@ -14,6 +14,7 @@ type Mutation {
   deletetemplate(type:String!,id:String!):Boolean!
   modifytemplate(type:String!,id:String!,value:String!):Boolean!
   updatewechat:Boolean
+  modifyptoforder(orderid:String!,ptid:String!):Boolean!
 }
 
 type Template{
@@ -58,18 +59,9 @@ maleyet:Int!
 femaleyet:Int!
 countyet:Int!
 postorder:Postorder
-pt:[Pt]
+pt:[PtPayload]
 }
 
-type Pt{
-id : ID
-name : String
-idnumber : String
-gender :Int
-wechatname : String
-phonenumber : String
-worktimes: Int
-}
 
 type Hotel{
 hotelid:String!

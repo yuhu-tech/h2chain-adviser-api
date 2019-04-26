@@ -21,7 +21,7 @@ const template = {
 
   async deletetemplate(parent, args, ctx, info){
     try{
-     const id = getUsedId(ctx)
+     const id = getUserId(ctx)
      if (args.type == 'workcontent'){
      var workcontent = await ctx.prismaHr.deleteWorkcontent({id : args.id})
      }
