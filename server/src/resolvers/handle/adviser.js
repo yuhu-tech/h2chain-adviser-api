@@ -33,13 +33,9 @@ async function GetPtofOrder (ctx,orderid){
 
 
 async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
-    try {
-       console.log("orderid is "+orderid)
-       console.log("adviserid is "+ adviserid)
-       console.log("datetime is "+ datetime)
-       console.log("state is "+state)
+     console.log(orderid)
+     try {
        var request = new messages.QueryRequest()
-       //to tranfer args to grpc
        if (orderid != null && orderid != undefined) {
          request.setOrderid(orderid)
        } 
@@ -54,8 +50,9 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
        }
         
         var response = await queryOrder(request);
-        var res = JSON.parse(response.array[0])
-        console.log("res is ..."+ JSON.stringify(res))
+        console.log(response)
+        var res = JSON.parse(response.array[0])        
+        
         var orderList = []
         for (var i = 0; i < res.orderOrigins.length; i++) {
             var obj = {}
@@ -64,7 +61,7 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
                 var modifiedorderObj = {}
                 modifiedorderObj['orderid'] = res.orderOrigins[i].id
                 modifiedorderObj['changeddatetime'] = res.orderOrigins[i].orderHotelModifies[j].dateTime
-                modifiedorderObj['changedduration'] = res.orderOrigins[i].orderHotelModifies[j].duration
+                modifiedorderObj['changedduration'] = res.orderOrigins[i].orderHotelModifies[j].duration/3600
                 modifiedorderObj['changedmode'] = res.orderOrigins[i].orderHotelModifies[j].mode
                 modifiedorderObj['changedcount'] = res.orderOrigins[i].orderHotelModifies[j].count
                 modifiedorderObj['changedmale'] = res.orderOrigins[i].orderHotelModifies[j].countMale
@@ -98,7 +95,7 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
             hotel["hotelid"] = res.orderOrigins[i].hotelId
             var users = await ctx.prismaHotel.users({where:{id:res.orderOrigins[i].hotelId}})
             var profiles = await ctx.prismaHotel.profiles({where:{user:{id:users[0].id}}})
-            hotel["hotelname"] = users[0].name
+            hotel["hotelname"] = profiles[0].name
             hotel["hotelphone"] = profiles[0].phone
             hotel["hotelintroduction"] = profiles[0].introduction
             hotel["hoteladdress"] = profiles[0].address
@@ -125,6 +122,7 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
             try {
                 var request = new messages.QueryPTRequest();
                 request.setOrderid(res.orderOrigins[i].id);
+                //TODO we will set the ptstatus = 13 to search both 1 and 3
                 request.setPtstatus(1);
                 var response = await queryPt(request)
                 obj['countyet'] = response.array[0].length
@@ -135,21 +133,21 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
                 var ptid = response.array[0][k][0]
                 var personalmsgs  = await ctx.prismaClient.personalmsgs({where:{user:{id:ptid}}})
                 // to judge if there is a male or female
-                if (personalmsgs[0].gender == 1)  {
+                if (JSON.parse(personalmsgs[0].gender) == 1)  {
                   obj['maleyet']= obj['maleyet'] + 1 
-                } else {
-                  obj['femaleyet'] == obj['femaleyet'] + 1
+                } else if (JSON.parse(personalmsgs[0].gender == 2)) {
+                  obj['femaleyet'] = obj['femaleyet'] + 1
                 }
                 //TODO
                 //to retrieve other pt message here
                 var pt = {}
-                pt['id'] = ptid
+                pt['ptid'] = ptid
                 pt['name'] = personalmsgs[0].name
                 pt['idnumber'] = personalmsgs[0].idnumber
                 pt['gender'] = personalmsgs[0].gender
                 pt['wechatname'] = "mocked wechat id"
                 pt['phonenumber'] = personalmsgs[0].phonenumber
-                pt['worktimes'] = "mocked worktimes"
+                pt['worktimes'] = 12
                 pts.push(pt)  
               }
                 obj['pt'] = pts  
