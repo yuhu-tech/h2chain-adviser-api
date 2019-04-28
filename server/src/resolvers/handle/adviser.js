@@ -122,8 +122,7 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
             try {
                 var request = new messages.QueryPTRequest();
                 request.setOrderid(res.orderOrigins[i].id);
-                //TODO we will set the ptstatus = 13 to search both 1 and 3
-                request.setPtstatus(1);
+                request.setPtstatus(13);
                 var response = await queryPt(request)
                 obj['countyet'] = response.array[0].length
                 //initial obj[maleyet] and obj[femaleyet]
