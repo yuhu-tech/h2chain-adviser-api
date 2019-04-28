@@ -137,8 +137,6 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
                 } else if (JSON.parse(personalmsgs[0].gender == 2)) {
                   obj['femaleyet'] = obj['femaleyet'] + 1
                 }
-                //TODO
-                //to retrieve other pt message here
                 var pt = {}
                 pt['ptid'] = ptid
                 pt['name'] = personalmsgs[0].name
@@ -147,6 +145,10 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
                 pt['wechatname'] = "mocked wechat id"
                 pt['phonenumber'] = personalmsgs[0].phonenumber
                 pt['worktimes'] = 12
+                var personalmsgs = await ctx.prismaClient.personalmsgs({where:{user:{id:ptid}}})
+                var personalmsg  = personalmsgs[0]
+                pt['height'] = personalmsgs[0].height
+                pt['weight'] = personalmsgs[0].weight
                 pts.push(pt)  
               }
                 obj['pt'] = pts  
