@@ -31,7 +31,27 @@ const order = {
      // request.setSourcestatus(1);                           // PT 原始状态  
     client.modifyPTOfOrder(request,function(err,response){
     });
-  } 
+  },
+  
+
+  async editremark (parent,args,ctx,info){
+    const id  = getUserId(ctx)
+    try{
+        var request = new messages.EditRequest();
+        request.setOrderid(args.orderid)     // 订单id         必传
+        request.setPtid(args.ptid)                            // ptid          必传
+        request.setStartdate(args.startdate)                         // 用工开始时间     
+        request.setEnddate(args.enddate)                          // 用工结束时间
+        request.setRealsalary(args.realsalary)                           // 实际时薪
+        request.setIsworked(args.isworked)                              // 是否参加了工作  必传  状态码： 1 - 表示参加工作  2 - 表示未参加
+        request.setType(args.type)
+     client.editRemark(request,function(err,response){  
+        console.log(response.array[0][0][7]) 
+        })              
+      } catch (error) {
+        throw (error)
+      }  
+  }
 }
 
 module.exports = { order }

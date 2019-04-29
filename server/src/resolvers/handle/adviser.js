@@ -164,6 +164,7 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
                 var ptid = response.array[0][k][0]
                 var personalmsgs  = await ctx.prismaClient.personalmsgs({where:{user:{id:ptid}}})
                 // to judge if there is a male or female
+                console.log("ptid is ..."+ptid)
                 if (JSON.parse(personalmsgs[0].gender) == 1)  {
                   obj['maleyet']= obj['maleyet'] + 1 
                 } else if (JSON.parse(personalmsgs[0].gender == 2)) {
@@ -181,9 +182,16 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
                 var personalmsg  = personalmsgs[0]
                 pt['height'] = personalmsgs[0].height
                 pt['weight'] = personalmsgs[0].weight
+                //here we retrieve ptorder state                
+                var requestpt = new messages.QueryPTRequest();
+                requestpt.setPtid(ptid);
+                requestpt.setOrderid(res.orderOrigins[i].id)
+                client.queryPTOfOrder(request,function(err,response){
+                pt['ptorderstate'] = response.array[0][0][7]
+                });
                 pts.push(pt)  
               }
-                obj['pt'] = pts  
+                obj['pt'] = pts 
             } catch (error) {
                 throw error
             }
