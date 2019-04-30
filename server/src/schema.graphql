@@ -16,7 +16,7 @@ type Mutation {
   deletetemplate(type:String!,id:String!):Boolean!
   modifytemplate(type:String!,id:String!,value:String!):Boolean!
   updatewechat:Boolean
-  modifyptoforder(orderid:String!,ptstatus:Int!):Boolean!
+  modifyptoforder(orderid:String!,ptid:String!,ptstatus:Int!):Boolean!
   editremark(orderid:String!,ptid:String!,startdate:Int!,enddate:Int!,realsalary:Int,isworked:Int,type:Int):Boolean
 }
 
@@ -53,6 +53,13 @@ worktimes:Int
 height:Int
 weight:Int
 ptorderstate:Int
+remark:[Remark]
+}
+
+type Remark{
+startDate:Int
+endDate:Int
+realSalary:Int
 }
 
 type Order {
