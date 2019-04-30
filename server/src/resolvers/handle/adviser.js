@@ -21,6 +21,53 @@ function queryPt(request) {
     })
 }
 
+
+function queryHistory(request) {
+    return new Promise((resolve, reject) => {
+        client.queryExperience(request, (err, date) => {
+            if (err) reject(err);
+            resolve(date);
+        })
+    })
+}
+
+
+async function AdviserSearchHistory(ctx,ptid) {
+      var request = new messages.QueryExperienceRequest();
+      request.setPtid(ptid)
+      var response = await queryHistory(request)
+          var res = JSON.parse(response.array[0])
+          var history = []
+          if (res.orderOrigins.length < 5){
+             var worked = {}
+             for (i = 0; i < res.orderOrigins.length; i++)
+            {
+           //worked['hotelid'] = res.orderOrigins[i].hotelId;
+             worked['occupation'] = res.orderOrigins[i].job;
+             var users = await ctx.prismaHotel.users({where:{id:res.orderOrigins[i].hotelId}})
+             var profiles = await ctx.prismaHotel.profiles({where:{user:{id:res.orderOrigins[i].hotelId}}})
+             worked['hotelname'] = profiles[0].name
+             history.push(worked)
+           }
+         } else {
+             var worked = {}
+           for (i = 0; i < 5; i++) {
+           //worked['hotelid'] = res.orderOrigins[i].hotelID;
+             worked['occupation'] = res.orderOrigins[i].job;
+            var users = await ctx.prismaHotel.users({where:{id:res.orderOrigins[i].hotelId}})
+             var profiles = await ctx.prismaHotel.profiles({where:{user:{id:res.orderOrigins[i].hotelId}}})
+            worked['hotelname'] = profiles[0].name
+             history.push(worked)
+           }
+          }
+            console.log(history)
+            return history
+            console.log(workhistory)
+}  
+
+
+
+
 //this function may not be uesd, I wrote it down here in AdviserGetOrderList
 async function GetPtofOrder (ctx,orderid){
     var client  = new services.QueryOrderClient('127.0.0.1:50051',grpc.credentials.createInsecure());
@@ -188,14 +235,19 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
                 pt['ptorderstate'] = responsept.array[0][0][7]
                 
                 var requestremark = new messages.QueryRemarkRequest()
-               // console.log(res.orderOrigins[i].id)
-               // console.log(ptid)
                 requestremark.setOrderid(res.orderOrigins[i].id)
                 requestremark.setPtid(ptid)
-                client.queryRemark(requestremark,function(err,response){
+                await client.queryRemark(requestremark, function(err,response){
                     var resremark = JSON.parse(response.array[0])
-                    pt['remark'] = resremark.orderCandidates[0].remark});
-                pts.push(pt)
+                    console.log("resmark is ..."+resremark.orderCandidates[0].remark.endDate)
+                    if (resremark.orderCandidates[0].remark != undefined){
+                    console.log("yahooo!!!!")
+                    pt['enddate'] = resremark.orderCandidates[0].remark.endDate
+                    pt['realsalary'] = resremark.orderCandidates[0].remark.realSalary
+                    pt['startdate'] = resremark.orderCandidates[0].remark.startDate
+                    }
+               })
+                    pts.push(pt)
                }
                 obj['pt'] = pts 
             } catch (error) {
@@ -204,12 +256,11 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
             orderList.push(obj)
         }
         //console.log(res.orderOrigins[0])
-        console.log(orderList)
+        console.log(JSON.stringify(orderList))
         return orderList
-        console.log(orderList.length)
     } catch (error) {
         throw error
     }
 }
 
-module.exports = {queryOrder,queryPt,AdviserGetOrderList,GetPtofOrder}
+module.exports = {queryOrder,queryPt,AdviserGetOrderList,GetPtofOrder,AdviserSearchHistory,queryHistory}

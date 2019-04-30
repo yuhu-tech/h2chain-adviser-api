@@ -4,7 +4,7 @@ type Query {
   searchptoforder(orderid:String):[Order]
   mytemplate: Template
   searchremark(orderid:String!):Boolean
-  searchhistory(ptid:String!):Boolean
+  searchhistory(ptid:String!):[Workhistory]
 }
 
 type Mutation {
@@ -19,6 +19,12 @@ type Mutation {
   modifyptoforder(orderid:String!,ptid:String!,ptstatus:Int!):Boolean!
   editremark(orderid:String!,ptid:String!,startdate:Int!,enddate:Int!,realsalary:Int,isworked:Int,type:Int):Boolean
 }
+
+type Workhistory{
+occupation:String
+hotelname:String
+}
+
 
 type Template{
   workcontents:[Workcontent]
@@ -53,13 +59,9 @@ worktimes:Int
 height:Int
 weight:Int
 ptorderstate:Int
-remark:[Remark]
-}
-
-type Remark{
-startDate:Int
-endDate:Int
-realSalary:Int
+startdate:Int
+enddate:Int
+realsalary:Int
 }
 
 type Order {

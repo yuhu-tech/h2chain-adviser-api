@@ -5,7 +5,6 @@ const messages = require('../../../grpc/examples/node/static_codegen/src/query_p
 const services = require('../../../grpc/examples/node/static_codegen/src/query_grpc_pb')
 const grpc = require('../../../grpc/examples/node/node_modules/grpc')
 const client  = new services.QueryOrderClient('127.0.0.1:50051',grpc.credentials.createInsecure());
-const request = new messages.QueryExperienceRequest();
 
 const query = {
   async me (parent, args, ctx, info) {
@@ -36,38 +35,17 @@ const query = {
 
   async search (parent, args, ctx, info){
     const id = getUserId(ctx)
-    return  handles.AdviserGetOrderList(ctx,id,args.orderid,args.state,args.datetime)  
+    return handles.AdviserGetOrderList(ctx,id,args.orderid,args.state,args.datetime)  
   },
    
   async searchptoforder (parent,args,ctx,info){
     console.log(args)
-    return  handles.GetPtofOrder(ctx,args.orderid)
+    return handles.GetPtofOrder(ctx,args.orderid)
   },
 
   async searchhistory (parent,args,ctx,info){
-    request.setPtid(args.ptid)
-    client.queryExperience(request,function(err,response){
-        var res = JSON.parse(response.array[0])
-        if (res.orderOrigins.length < 5){
-           for (i = 0; i < res.orderOrigins.length; i++)
-        {
-           worked['hotelid'] = res.orderOrigins[i].hotelID;
-           worked['occupation'] = res.orderOrigins[i].job;
-           worked['hotelname'] = "..."
-        }    
-           history = history.push(worked)
-        } else {
-           for (i = 0; i < 5; i++) {
-        {
-           worked['hotelid'] = res.orderOrigins[i].hotelID;
-           worked['occupation'] = res.orderOrigins[i].job;
-           worked['hotelname'] = "..."
-        }    
-           history = history.push(worked)
-        }
-     }
-   })
- },
+    return handles.AdviserSearchHistory(ctx,args.ptid)
+  },
 
   async searchremark (parent,args,ctx,info){
     const id = getUsedId(ctx)
