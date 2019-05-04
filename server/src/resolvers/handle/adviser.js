@@ -31,6 +31,14 @@ function queryHistory(request) {
     })
 }
 
+function queryRemark(request) {
+    return new Promise((resolve, reject) => {
+        client.queryRemark(request, (err, date) => {
+            if (err) reject(err);
+            resolve(date);
+        })
+    })
+}
 
 async function AdviserSearchHistory(ctx,ptid) {
       var request = new messages.QueryExperienceRequest();
@@ -237,17 +245,14 @@ async function AdviserGetOrderList(ctx,adviserid,orderid,state,datetime) {
                 var requestremark = new messages.QueryRemarkRequest()
                 requestremark.setOrderid(res.orderOrigins[i].id)
                 requestremark.setPtid(ptid)
-                await client.queryRemark(requestremark, function(err,response){
-                    var resremark = JSON.parse(response.array[0])
-                    console.log("resmark is ..."+resremark.orderCandidates[0].remark.endDate)
-                    if (resremark.orderCandidates[0].remark != undefined){
-                    console.log("yahooo!!!!")
-                    pt['enddate'] = resremark.orderCandidates[0].remark.endDate
-                    pt['realsalary'] = resremark.orderCandidates[0].remark.realSalary
-                    pt['startdate'] = resremark.orderCandidates[0].remark.startDate
-                    }
-               })
-                    pts.push(pt)
+                var response = await queryRemark(requestremark)
+                var resremark = JSON.parse(response.array[0])
+                if (resremark.orderCandidates[0].remark != undefined){
+                pt['enddate'] = resremark.orderCandidates[0].remark.endDate
+                pt['realsalary'] = resremark.orderCandidates[0].remark.realSalary
+                pt['startdate'] = resremark.orderCandidates[0].remark.startDate
+                }
+                pts.push(pt)
                }
                 obj['pt'] = pts 
             } catch (error) {
