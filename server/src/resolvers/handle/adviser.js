@@ -67,9 +67,7 @@ async function AdviserSearchHistory(ctx, ptid) {
       history.push(worked)
     }
   }
-  console.log(history)
   return history
-  console.log(workhistory)
 }
 
 
@@ -136,120 +134,141 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
           if (res.orderOrigins[i].mode == 0) {
             originorder['male'] = 0
             originorder['female'] = 0
-            originorder['count'] = Math.ceil(res.orderOrigins[i].count * 1.05)
-          } else {
-            originorder['male'] = Math.ceil(res.orderOrigins[i].countMale * 1.05)
-            originorder['female'] = Math.ceil((res.orderOrigins[i].count - res.orderOrigins[i].countMale) * 1.05)
-            originorder['count'] = originorder['male'] + originorder['female']
-          }
-        } else {
-          if (res.orderOrigins[i].mode == 0) {
-            originorder['male'] = 0
-            originorder['female'] = 0
-            originorder['count'] = res.orderOrigins[i].count
-          } else {
-            originorder['male'] = res.orderOrigins[i].countMale
-            originorder['female'] = res.orderOrigins[i].count - res.orderOrigins[i].countMale
-            originorder['count'] = originorder['male'] + originorder['female']
-          }
-        }
-      } else {
-        if (res.orderOrigins[i].mode == 0) {
-          originorder['male'] = 0
-          originorder['female'] = 0
-          originorder['count'] = res.orderOrigins[i].count
-        } else {
-          originorder['male'] = res.orderOrigins[i].countMale
-          originorder['female'] = res.orderOrigins[i].count - res.orderOrigins[i].countMale
-          originorder['count'] = originorder['male'] + originorder['female']
-        }
-      }
+    originorder['count'] = Math.ceil(res.orderOrigins[i].count * 1.05)
+  } else {
+    originorder['male'] = Math.ceil(res.orderOrigins[i].countMale * 1.05)
+    originorder['female'] = Math.ceil((res.orderOrigins[i].count - res.orderOrigins[i].countMale) * 1.05)
+    originorder['count'] = originorder['male'] + originorder['female']
+  }
+} else {
+  if (res.orderOrigins[i].mode == 0) {
+    originorder['male'] = 0
+    originorder['female'] = 0
+    originorder['count'] = res.orderOrigins[i].count
+  } else {
+    originorder['male'] = res.orderOrigins[i].countMale
+    originorder['female'] = res.orderOrigins[i].count - res.orderOrigins[i].countMale
+    originorder['count'] = originorder['male'] + originorder['female']
+  }
+}
+} else {
+if (res.orderOrigins[i].mode == 0) {
+  originorder['male'] = 0
+  originorder['female'] = 0
+  originorder['count'] = res.orderOrigins[i].count
+} else {
+  originorder['male'] = res.orderOrigins[i].countMale
+  originorder['female'] = res.orderOrigins[i].count - res.orderOrigins[i].countMale
+  originorder['count'] = originorder['male'] + originorder['female']
+}
+}
 
-      var adviser = {}
-      adviser['name'] = res.orderOrigins[i].adviserId // 这里全部留了 adviserId 通过这个获取adviser信息
-      //we add to retrieve from local databse for implement of Adviser message
-      var adviserUsers = await ctx.prismaHr.users({ where: { id: res.orderOrigins[i].adviserId } })
-      var adviserProfiles = await ctx.prismaHr.profiles({ where: { user: { id: adviserUsers[0].id } } })
-      adviser['name'] = adviserUsers[0].name
-      adviser['phone'] = adviserProfiles[0].phone
-      adviser['companyname'] = adviserProfiles[0].companyname
-      adviser["introduction"] = adviserProfiles[0].introduction
+var adviser = {}
+adviser['name'] = res.orderOrigins[i].adviserId // 这里全部留了 adviserId 通过这个获取adviser信息
+//we add to retrieve from local databse for implement of Adviser message
+var adviserUsers = await ctx.prismaHr.users({ where: { id: res.orderOrigins[i].adviserId } })
+var adviserProfiles = await ctx.prismaHr.profiles({ where: { user: { id: adviserUsers[0].id } } })
+adviser['name'] = adviserUsers[0].name
+adviser['phone'] = adviserProfiles[0].phone
+adviser['companyname'] = adviserProfiles[0].companyname
+adviser["introduction"] = adviserProfiles[0].introduction
 
-      var hotel = {}
-      //we add to retrieve from local database for implement of Hotel messgae
-      hotel["hotelid"] = res.orderOrigins[i].hotelId
-      var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
-      var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: users[0].id } } })
-      hotel["hotelname"] = profiles[0].name
-      hotel["hotelphone"] = profiles[0].phone
-      hotel["hotelintroduction"] = profiles[0].introduction
-      hotel["hoteladdress"] = profiles[0].address
+var hotel = {}
+//we add to retrieve from local database for implement of Hotel messgae
+hotel['hotelid'] = res.orderOrigins[i].hotelId
+var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
+var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: users[0].id } } })
+hotel['hotelname'] = profiles[0].name
+hotel['hotelphone'] = profiles[0].phone
+hotel['hotelintroduction'] = profiles[0].introduction
+hotel['hoteladdress'] = profiles[0].address
 
-      var postorder = {}
-      if (res.orderOrigins[i].orderAdviserModifies.length != 0) {
-        postorder['orderid'] = res.orderOrigins[i].id
-        postorder['salary'] = res.orderOrigins[i].orderAdviserModifies[0].hourlySalary
-        postorder['workcontent'] = res.orderOrigins[i].orderAdviserModifies[0].workCount   // 这里有一个命名错误，是由于datamodel.graphql 里面字段错误造成的，后续会改
-        postorder['attention'] = res.orderOrigins[i].orderAdviserModifies[0].attention
-        postorder['isfloat'] = res.orderOrigins[i].orderAdviserModifies[0].isFloat
-      }
+var postorder = {}
+if (res.orderOrigins[i].orderAdviserModifies.length != 0) {
+postorder['orderid'] = res.orderOrigins[i].id
+postorder['salary'] = res.orderOrigins[i].orderAdviserModifies[0].hourlySalary
+postorder['workcontent'] = res.orderOrigins[i].orderAdviserModifies[0].workCount   // 这里有一个命名错误，是由于datamodel.graphql 里面字段错误造成的，后续会改
+postorder['attention'] = res.orderOrigins[i].orderAdviserModifies[0].attention
+postorder['isfloat'] = res.orderOrigins[i].orderAdviserModifies[0].isFloat
+}
 
-      obj['modifiedorder'] = modifiedorder
-      obj['originorder'] = originorder
-      obj['adviser'] = adviser
-      obj['hotel'] = hotel
-      obj['postorder'] = postorder
-      obj['state'] = res.orderOrigins[i].status - 1
+obj['modifiedorder'] = modifiedorder
+obj['originorder'] = originorder
+obj['adviser'] = adviser
+obj['hotel'] = hotel
+obj['postorder'] = postorder
+obj['state'] = res.orderOrigins[i].status - 1
 
-      // 查询当前已报名的男女人数
-      // 调用queryPTOfOrder()接口查询，某个订单下已报名PT的总人数
-      var pts = []
-      try {
-        var request = new messages.QueryPTRequest();
-        request.setOrderid(res.orderOrigins[i].id);
-        request.setPtstatus(13);
-        var response = await queryPt(request)
-        obj['countyet'] = response.array[0].length
-        //initial obj[maleyet] and obj[femaleyet]
-        if (obj['maleyet'] == undefined) { obj['maleyet'] = 0 }
-        if (obj['femaleyet'] == undefined) { obj['femaleyet'] = 0 }
-        for (var k = 0; k < obj['countyet']; k++) {
-          var ptid = response.array[0][k][0]
-          var personalmsgs = await ctx.prismaClient.personalmsgs({ where: { user: { id: ptid } } })
-          // to judge if there is a male or female
-          if (JSON.parse(personalmsgs[0].gender) == 1) {
-            obj['maleyet'] = obj['maleyet'] + 1
-          } else if (JSON.parse(personalmsgs[0].gender == 2)) {
-            obj['femaleyet'] = obj['femaleyet'] + 1
-          }
-          var pt = {}
-          pt['ptid'] = ptid
-          pt['name'] = personalmsgs[0].name
-          pt['idnumber'] = personalmsgs[0].idnumber
-          pt['gender'] = personalmsgs[0].gender
-          pt['wechatname'] = "mocked wechat id"
-          pt['phonenumber'] = personalmsgs[0].phonenumber
-          pt['worktimes'] = 12
-          var personalmsgs = await ctx.prismaClient.personalmsgs({ where: { user: { id: ptid } } })
-          var personalmsg = personalmsgs[0]
-          pt['height'] = personalmsgs[0].height
-          pt['weight'] = personalmsgs[0].weight
-          //here we retrieve ptorder state                
-          request.setPtid(ptid);
-          request.setOrderid(res.orderOrigins[i].id)
-          responsept = await queryPt(request)
-          pt['ptorderstate'] = responsept.array[0][0][7]
+// 查询当前已报名的男女人数
+// 调用queryPTOfOrder()接口查询，某个订单下已报名PT的总人数
+var pts = []
+try {
+var request = new messages.QueryPTRequest();
+request.setOrderid(res.orderOrigins[i].id);
+request.setPtstatus(13);
+var response = await queryPt(request)
+obj['countyet'] = response.array[0].length
+//initial obj[maleyet] and obj[femaleyet]
+if (obj['maleyet'] == undefined) { obj['maleyet'] = 0 }
+if (obj['femaleyet'] == undefined) { obj['femaleyet'] = 0 }
+for (var k = 0; k < obj['countyet']; k++) {
+  var ptid = response.array[0][k][0]
+  var personalmsgs = await ctx.prismaClient.personalmsgs({ where: { user: { id: ptid } } })
+  // to judge if there is a male or female
+  if (JSON.parse(personalmsgs[0].gender) == 1) {
+    obj['maleyet'] = obj['maleyet'] + 1
+  } else if (JSON.parse(personalmsgs[0].gender == 2)) {
+    obj['femaleyet'] = obj['femaleyet'] + 1
+  }
+  var pt = {}
+  pt['ptid'] = ptid
+  pt['name'] = personalmsgs[0].name
+  pt['idnumber'] = personalmsgs[0].idnumber
+  pt['gender'] = personalmsgs[0].gender
+  pt['wechatname'] = "mocked wechat id"
+  pt['phonenumber'] = personalmsgs[0].phonenumber
+  var personalmsgs = await ctx.prismaClient.personalmsgs({ where: { user: { id: ptid } } })
+  var personalmsg = personalmsgs[0]
+  pt['height'] = personalmsgs[0].height
+  pt['weight'] = personalmsgs[0].weight
+  //here we retrieve ptorder state                
+  request.setPtid(ptid);
+  request.setOrderid(res.orderOrigins[i].id)
+  responsept = await queryPt(request)
+  pt['ptorderstate'] = responsept.array[0][0][7]
 
-          var requestremark = new messages.QueryRemarkRequest()
-          requestremark.setOrderid(res.orderOrigins[i].id)
-          requestremark.setPtid(ptid)
-          var response = await queryRemark(requestremark)
-          var resremark = JSON.parse(response.array[0])
-          if (resremark.orderCandidates[0].remark != undefined) {
-            pt['enddate'] = resremark.orderCandidates[0].remark.endDate
-            pt['realsalary'] = resremark.orderCandidates[0].remark.realSalary
-            pt['startdate'] = resremark.orderCandidates[0].remark.startDate
-          }
+  var requestremark = new messages.QueryRemarkRequest()
+  requestremark.setOrderid(res.orderOrigins[i].id)
+  requestremark.setPtid(ptid)
+  var response = await queryRemark(requestremark)
+  var resremark = JSON.parse(response.array[0])
+  var remark = {}
+  if (resremark.orderCandidates[0].remark != undefined) {
+    remark['enddate'] = resremark.orderCandidates[0].remark.endDate
+    remark['realsalary'] = resremark.orderCandidates[0].remark.realSalary
+    remark['startdate'] = resremark.orderCandidates[0].remark.startDate
+    pt['remark'] = remark
+  }
+  //retrieve worktimes the number of orderorigins
+  var requestworktime = new messages.QueryExperienceRequest()
+  requestworktime.setPtid(ptid)
+  var responseworktime = await queryHistory(requestworktime)
+  var resworktime = JSON.parse(responseworktime.array[0])
+  console.log("resworktime is "+JSON.stringify(resworktime))
+  pt['worktimes'] = resworktime.orderOrigins.length
+  
+  //calculate worktime
+  var workhours = 0
+  for (var i = 0; i < resworktime.orderOrigins.length; i++) {
+    for (var j = 0; j < resworktime.orderOrigins[i].orderCandidates.length; j++) {
+	    console.log("remark is "+JSON.stringify(resworktime.orderOrigins[i].orderCandidates[j].remark))
+            if (resworktime.orderOrigins[i].orderCandidates[j].remark.ptId === ptid){
+	    workhours = workhours + resworktime.orderOrigins[i].orderCandidates[j].remark.endDate - resworktime.orderOrigins[i].orderCandidates[j].remark.startDate
+	}
+     }
+  }  
+  pt['workhours'] = Math.round(workhours / 3600)
+  
           pts.push(pt)
         }
         obj['pt'] = pts
