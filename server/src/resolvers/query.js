@@ -34,8 +34,15 @@ const query = {
 
   async search(parent, args, ctx, info) {
     const id = getUserId(ctx)
+    if (args.state == 11) {
+       todo =  await handles.AdviserGetOrderList(ctx,id,args.orderid,0,args.datetime); 
+       doing = await handles.AdviserGetOrderList(ctx,id,args.orderid,1,args.datetime); 
+       Array.prototype.push.apply(todo,doing)
+       return todo 
+       } else {
     return handles.AdviserGetOrderList(ctx, id, args.orderid, args.state, args.datetime)
-  },
+       }
+    },
 
   async searchptoforder(parent, args, ctx, info) {
     console.log(args)

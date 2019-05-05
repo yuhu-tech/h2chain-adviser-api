@@ -93,7 +93,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
             request.setDate(datetime)
         }
         else if (state != null && state != undefined) {
-            request.setStatus(state + 1)
+          request.setStatus(state + 1)
         }
         else if (adviserid != null && adviserid != undefined && datetime == undefined && state == undefined) {
             request.setAdviser(adviserid)
@@ -106,18 +106,21 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
         for (var i = 0; i < res.orderOrigins.length; i++) {
             var obj = {}
             var modifiedorder = []
-            for (var j = 0; j < res.orderOrigins[i].orderHotelModifies.length; j++) {
-                var modifiedorderObj = {}
-                modifiedorderObj['orderid'] = res.orderOrigins[i].id
-                modifiedorderObj['changeddatetime'] = res.orderOrigins[i].orderHotelModifies[j].dateTime
-                modifiedorderObj['changedduration'] = res.orderOrigins[i].orderHotelModifies[j].duration / 3600
-                modifiedorderObj['changedmode'] = res.orderOrigins[i].orderHotelModifies[j].mode
-                modifiedorderObj['changedcount'] = res.orderOrigins[i].orderHotelModifies[j].count
-                modifiedorderObj['changedmale'] = res.orderOrigins[i].orderHotelModifies[j].countMale
-                modifiedorderObj['changedfemale'] = res.orderOrigins[i].orderHotelModifies[j].count - res.orderOrigins[i].orderHotelModifies[j].countMale
-                modifiedorder.push(modifiedorderObj)
-            }
-
+	    var isModified = false
+	    if (res.orderOrigins[i].orderHotelModifies.length != 0){
+		isModified = true
+            	for (var j = 0; j < res.orderOrigins[i].orderHotelModifies.length; j++) {
+                    var modifiedorderObj = {}
+                    modifiedorderObj['orderid'] = res.orderOrigins[i].id
+                    modifiedorderObj['changeddatetime'] = res.orderOrigins[i].orderHotelModifies[j].dateTime
+                    modifiedorderObj['changedduration'] = res.orderOrigins[i].orderHotelModifies[j].duration / 3600
+                    modifiedorderObj['changedmode'] = res.orderOrigins[i].orderHotelModifies[j].mode
+                    modifiedorderObj['changedcount'] = res.orderOrigins[i].orderHotelModifies[j].count
+                    modifiedorderObj['changedmale'] = res.orderOrigins[i].orderHotelModifies[j].countMale
+                    modifiedorderObj['changedfemale'] = res.orderOrigins[i].orderHotelModifies[j].count - res.orderOrigins[i].orderHotelModifies[j].countMale
+                    modifiedorder.push(modifiedorderObj)
+                }
+	    }
             var originorder = {}
             originorder['orderid'] = res.orderOrigins[i].id
             originorder['occupation'] = res.orderOrigins[i].job
@@ -229,10 +232,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
                     pt['height'] = personalmsgs[0].height
                     pt['weight'] = personalmsgs[0].weight
                     //here we retrieve ptorder state                
-                    request.setPtid(ptid);
-                    request.setOrderid(res.orderOrigins[i].id)
-                    responsept = await queryPt(request)
-                    pt['ptorderstate'] = responsept.array[0][0][7]
+                    pt['ptorderstate'] = response.array[0][k][7]
 
                     var requestremark = new messages.QueryRemarkRequest()
                     requestremark.setOrderid(res.orderOrigins[i].id)
@@ -270,7 +270,11 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
             } catch (error) {
                 throw error
             }
-            orderList.push(obj)
+	    if (isModified == true){
+		orderList.unshift(obj)
+	    }else{
+		orderList.push(obj)
+	    }
         }
         return orderList
     } catch (error) {
