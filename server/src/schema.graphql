@@ -59,10 +59,16 @@ worktimes:Int
 height:Int
 weight:Int
 ptorderstate:Int
+remark:Remark
+workhours:Int
+}
+
+type Remark{
 startdate:Int
 enddate:Int
 realsalary:Int
 }
+
 
 type Order {
 adviser: Adviser!
