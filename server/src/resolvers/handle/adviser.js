@@ -237,8 +237,8 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
                     var requestremark = new messages.QueryRemarkRequest()
                     requestremark.setOrderid(res.orderOrigins[i].id)
                     requestremark.setPtid(ptid)
-                    var response = await queryRemark(requestremark)
-                    var resremark = JSON.parse(response.array[0])
+                    var responseremark = await queryRemark(requestremark)
+                    var resremark = JSON.parse(responseremark.array[0])
                     var remark = {}
                     if (resremark.orderCandidates[0].remark != undefined) {
                         remark['enddate'] = resremark.orderCandidates[0].remark.endDate
@@ -252,16 +252,16 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
                     var responseworktime = await queryHistory(requestworktime)
                     var resworktime = JSON.parse(responseworktime.array[0])
                     pt['worktimes'] = resworktime.orderOrigins.length
-
                     //calculate worktime
                     var workhours = 0
-                    for (var i = 0; i < resworktime.orderOrigins.length; i++) {
-                        for (var j = 0; j < resworktime.orderOrigins[i].orderCandidates.length; j++) {
-                            if (resworktime.orderOrigins[i].orderCandidates[j].remark.ptId === ptid) {
-                                workhours = workhours + resworktime.orderOrigins[i].orderCandidates[j].remark.endDate - resworktime.orderOrigins[i].orderCandidates[j].remark.startDate
+                    for (var p = 0; p < resworktime.orderOrigins.length; p++) {
+                        for (var q = 0; q < resworktime.orderOrigins[p].orderCandidates.length; q++) {
+                            if (resworktime.orderOrigins[p].orderCandidates[q].remark != null  && resworktime.orderOrigins[p].orderCandidates[q].remark.ptId === ptid) {
+                                workhours = workhours + resworktime.orderOrigins[p].orderCandidates[q].remark.endDate - resworktime.orderOrigins[p].orderCandidates[q].remark.startDate
                             }
                         }
                     }
+              
                     pt['workhours'] = Math.round(workhours / 3600)
 
                     pts.push(pt)
