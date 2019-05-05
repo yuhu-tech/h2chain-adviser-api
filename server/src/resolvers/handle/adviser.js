@@ -79,13 +79,11 @@ async function GetPtofOrder(ctx, orderid) {
   var request = new messages.QueryPTRequest();
   request.setOrderid(orderid);
   client.queryPTOfOrder(request, function (err, response) {
-    console.log(response.array[0])
   });
 }
 
 
 async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
-  console.log(orderid)
   try {
     var request = new messages.QueryRequest()
     if (orderid != null && orderid != undefined) {
@@ -102,7 +100,6 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
     }
 
     var response = await queryOrder(request);
-    console.log(response)
     var res = JSON.parse(response.array[0])
 
     var orderList = []
@@ -254,14 +251,12 @@ for (var k = 0; k < obj['countyet']; k++) {
   requestworktime.setPtid(ptid)
   var responseworktime = await queryHistory(requestworktime)
   var resworktime = JSON.parse(responseworktime.array[0])
-  console.log("resworktime is "+JSON.stringify(resworktime))
   pt['worktimes'] = resworktime.orderOrigins.length
   
   //calculate worktime
   var workhours = 0
   for (var i = 0; i < resworktime.orderOrigins.length; i++) {
     for (var j = 0; j < resworktime.orderOrigins[i].orderCandidates.length; j++) {
-	    console.log("remark is "+JSON.stringify(resworktime.orderOrigins[i].orderCandidates[j].remark))
             if (resworktime.orderOrigins[i].orderCandidates[j].remark.ptId === ptid){
 	    workhours = workhours + resworktime.orderOrigins[i].orderCandidates[j].remark.endDate - resworktime.orderOrigins[i].orderCandidates[j].remark.startDate
 	}
@@ -277,8 +272,6 @@ for (var k = 0; k < obj['countyet']; k++) {
       }
       orderList.push(obj)
     }
-    //console.log(res.orderOrigins[0])
-    console.log(JSON.stringify(orderList))
     return orderList
   } catch (error) {
     throw error
