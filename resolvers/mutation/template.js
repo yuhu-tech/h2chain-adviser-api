@@ -1,6 +1,4 @@
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const { getUserId } = require('../../utils')
+const { getUserId } = require('../../utils/utils')
 
 const template = {
   async createtemplate(parent, args, ctx, info) {

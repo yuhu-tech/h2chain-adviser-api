@@ -1,8 +1,8 @@
-const { getUserId } = require('../utils')
-const handles = require('../resolvers/handle/adviser')
-const messages = require('../../../grpc/examples/node/static_codegen/src/query_pb')
-const services = require('../../../grpc/examples/node/static_codegen/src/query_grpc_pb')
-const grpc = require('../../../grpc/examples/node/node_modules/grpc')
+const { getUserId } = require('../../utils/utils')
+const handles = require('../handle/adviser')
+const messages = require('../../grpc/query/query_pb')
+const services = require('../../grpc/query/query_grpc_pb')
+const grpc = require('grpc')
 const client = new services.QueryOrderClient('127.0.0.1:50051', grpc.credentials.createInsecure());
 
 const query = {
