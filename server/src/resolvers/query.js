@@ -40,7 +40,7 @@ const query = {
        Array.prototype.push.apply(todo,doing)
        return todo 
        } else {
-    return handles.AdviserGetOrderList(ctx, id, args.orderid, args.state, args.datetime)
+       return handles.AdviserGetOrderList(ctx, id, args.orderid, args.state, args.datetime,args.ptname)
        }
     },
 
