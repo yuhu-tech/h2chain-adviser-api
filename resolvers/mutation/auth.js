@@ -43,15 +43,12 @@ const auth = {
   },
 
   async postorder(parent, args, ctx, info) {
-    console.log("Successfully post an order")
     const morderpayload = orderpayload
     return morderpayload
   },
 
   async changepassword(parent, args, ctx, info) {
     const id = getUserId(ctx)
-    console.log(id);
-    console.log(args)
     const users = await ctx.prismaHr.users({ where: { id } })
     if (!users) {
       throw new Error(`No such user found for email: ${email}`)

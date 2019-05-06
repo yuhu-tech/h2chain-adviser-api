@@ -21,14 +21,12 @@ const query = {
 
   async mytemplate(parent, args, ctx, info) {
     const id = getUserId(ctx)
-    console.log(id)
     const workcontents = await ctx.prismaHr.workcontents({ where: { userid: id } })
     const attentions = await ctx.prismaHr.attentions({ where: { userid: id } })
     var result = {
       workcontents: workcontents,
       attentions: attentions
     }
-    console.log(result)
     return result
   },
 
@@ -45,7 +43,6 @@ const query = {
     },
 
   async searchptoforder(parent, args, ctx, info) {
-    console.log(args)
     return handles.GetPtofOrder(ctx, args.orderid)
   },
 
@@ -59,7 +56,6 @@ const query = {
     request.setPtid(id)
     client.queryRemark(request, function (err, response) {
       var res = JSON.parse(response.array[0])
-      console.log(res.orderCandidates[0].remark)
       return res.orderCandidates[0].remark
     });
   }

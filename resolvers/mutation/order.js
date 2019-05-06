@@ -14,7 +14,6 @@ const order = {
     request.setWorkcontent(args.postorder.workcontent);             //工作内容
     request.setAttention(args.postorder.attention);                   //注意事项
     client.postOrder(request, function (err, response) {
-      console.log(response.array)
     });
     var error = false
     return error
@@ -40,7 +39,6 @@ const order = {
     var request = new messages.CloseRequest();
     request.setOrderid(args.orderid)
     client.closeOrder(request, function (err, response) {
-      console.log(response);
     })
   },
 
@@ -48,13 +46,6 @@ const order = {
     const id = getUserId(ctx)
     try {
       var request = new messages.EditRequest();
-      console.log(args.orderid)
-      console.log(args.ptid)
-      console.log(args.startdate)
-      console.log(args.enddate)
-      console.log(args.realsalary)
-      console.log(args.isworked)
-      console.log(args.type)
 
       request.setOrderid(args.orderid)     // 订单id         必传
       request.setPtid(args.ptid)                            // ptid          必传
@@ -64,7 +55,6 @@ const order = {
       request.setIsworked(args.isworked)                              // 是否参加了工作  必传  状态码： 1 - 表示参加工作  2 - 表示未参加
       request.setType(args.type)
       client.editRemark(request, function (err, response) {
-        console.log(response.array)
       })
     } catch (error) {
       throw (error)
