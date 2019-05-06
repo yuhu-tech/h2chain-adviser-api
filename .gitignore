@@ -1,3 +1,11 @@
+# config.js
+config.js
+
+# tmp files
+*.swp
+*.swo
+.DS_Store
+
 # Logs
 logs
 *.log

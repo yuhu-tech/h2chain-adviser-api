@@ -18,6 +18,7 @@ type Mutation {
   updatewechat:Boolean
   modifyptoforder(orderid:String!,ptid:String!,ptstatus:Int!):Boolean!
   editremark(orderid:String!,ptid:String!,startdate:Int!,enddate:Int!,realsalary:Int,isworked:Int,type:Int):Boolean
+  closeorder(orderid: String!):OrderPayload
 }
 
 type Workhistory{

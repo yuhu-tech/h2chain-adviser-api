@@ -35,6 +35,14 @@ const order = {
     }
   },
 
+  async closeorder(parent, args, ctx, info) {
+    var client = new services.MutationClient('119.3.106.151:50051', grpc.credentials.createInsecure());
+    var request = new messages.CloseRequest();
+    request.setOrderid(args.orderid)
+    client.closeOrder(request, function (err, response) {
+      console.log(response);
+    })
+  },
 
   async editremark(parent, args, ctx, info) {
     const id = getUserId(ctx)
