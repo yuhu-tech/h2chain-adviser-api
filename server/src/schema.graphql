@@ -1,6 +1,6 @@
 type Query {
   me: User!
-  search(orderid: String,state:Int,datetime:Int):[Order]
+  search(orderid:String,state:Int,datetime:Int,ptname:String):[Order]
   searchptoforder(orderid:String):[Order]
   mytemplate: Template
   searchremark(orderid:String!):Boolean

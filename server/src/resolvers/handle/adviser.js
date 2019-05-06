@@ -83,7 +83,7 @@ async function GetPtofOrder(ctx, orderid) {
 }
 
 
-async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
+async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptname) {
     try {
         var request = new messages.QueryRequest()
         if (orderid != null && orderid != undefined) {
@@ -223,6 +223,8 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime) {
                     var pt = {}
                     pt['ptid'] = ptid
                     pt['name'] = personalmsgs[0].name
+                    //TODO  if the ptname is not null and the pt['name'] not equals ptname, we will break it 
+                    if (ptname != null && ptname != undefined && pt['name'] != ptname) {break}
                     pt['idnumber'] = personalmsgs[0].idnumber
                     pt['gender'] = personalmsgs[0].gender
                     pt['wechatname'] = "mocked wechat id"
