@@ -3,7 +3,7 @@ const handles = require('../handle/adviser')
 const messages = require('../../grpc/query/query_pb')
 const services = require('../../grpc/query/query_grpc_pb')
 const grpc = require('grpc')
-const client = new services.QueryOrderClient('127.0.0.1:50051', grpc.credentials.createInsecure());
+const client = new services.QueryOrderClient('119.3.106.151:50051', grpc.credentials.createInsecure());
 
 const query = {
   async me(parent, args, ctx, info) {
