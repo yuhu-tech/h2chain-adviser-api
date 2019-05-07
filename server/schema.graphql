@@ -3,7 +3,7 @@ type Query {
   search(orderid:String,state:Int,datetime:Int,ptname:String):[Order]
   searchptoforder(orderid:String):[Order]
   mytemplate: Template
-  searchremark(orderid:String!):Boolean
+  searchremark(orderid:String!,ptid:String!):Boolean
   searchhistory(ptid:String!):[Workhistory]
 }
 
@@ -29,7 +29,7 @@ hotelname:String
 
 type Template{
   workcontents:[Workcontent]
-  attentions:[Attention] 
+  attentions:[Attention]
 }
 
 type Workcontent{

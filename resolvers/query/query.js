@@ -54,7 +54,7 @@ const query = {
   async searchremark(parent, args, ctx, info) {
     const id = getUsedId(ctx)
     request.setOrderid(args.orderid)
-    request.setPtid(id)
+    request.setPtid(args.ptid)
     client.queryRemark(request, function (err, response) {
       var res = JSON.parse(response.array[0])
       return res.orderCandidates[0].remark
