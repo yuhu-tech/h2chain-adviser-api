@@ -1,7 +1,8 @@
 var messages = require('../../grpc/query/query_pb');
 var services = require('../../grpc/query/query_grpc_pb');
 var grpc = require('grpc');
-var client = new services.QueryOrderClient('119.3.106.151:50051', grpc.credentials.createInsecure())
+const config = require('../../conf/config');
+var client = new services.QueryOrderClient(config.localip, grpc.credentials.createInsecure())
 
 function queryOrder(request) {
     return new Promise((resolve, reject) => {
@@ -75,7 +76,7 @@ async function AdviserSearchHistory(ctx, ptid) {
 
 //this function may not be uesd, I wrote it down here in AdviserGetOrderList
 async function GetPtofOrder(ctx, orderid) {
-    var client = new services.QueryOrderClient('119.3.106.151:50051', grpc.credentials.createInsecure());
+    var client = new services.QueryOrderClient(config.localip, grpc.credentials.createInsecure());
     var request = new messages.QueryPTRequest();
     request.setOrderid(orderid);
     client.queryPTOfOrder(request, function (err, response) {
