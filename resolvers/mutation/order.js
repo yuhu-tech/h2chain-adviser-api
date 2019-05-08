@@ -2,7 +2,7 @@ const { getUserId } = require('../../utils/utils')
 const messages = require('../../grpc/mutation/mutation_pb');
 const services = require('../../grpc/mutation/mutation_grpc_pb');
 const grpc = require('grpc');
-const config  = require('../../conf/config')
+const config = require('../../conf/config')
 const client = new services.MutationClient(config.localip, grpc.credentials.createInsecure());
 
 

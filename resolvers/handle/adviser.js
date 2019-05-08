@@ -88,16 +88,16 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
     try {
         var request = new messages.QueryRequest()
         if (orderid != null && orderid != undefined) {
-           request.setOrderid(orderid)
+            request.setOrderid(orderid)
         }
         if (datetime != null && datetime != undefined) {
-           request.setDate(datetime)
+            request.setDate(datetime)
         }
         if (state != null && state != undefined) {
-           request.setStatus(state + 1)
+            request.setStatus(state + 1)
         }
         if (adviserid != null && adviserid != undefined) {
-           request.setAdviser(adviserid)
+            request.setAdviser(adviserid)
         }
 
         var response = await queryOrder(request);
@@ -107,10 +107,10 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
         for (var i = 0; i < res.orderOrigins.length; i++) {
             var obj = {}
             var modifiedorder = []
-	    var isModified = false
-	    if (res.orderOrigins[i].orderHotelModifies.length != 0){
-		isModified = true
-            	for (var j = 0; j < res.orderOrigins[i].orderHotelModifies.length; j++) {
+            var isModified = false
+            if (res.orderOrigins[i].orderHotelModifies.length != 0) {
+                isModified = true
+                for (var j = 0; j < res.orderOrigins[i].orderHotelModifies.length; j++) {
                     var modifiedorderObj = {}
                     modifiedorderObj['orderid'] = res.orderOrigins[i].id
                     modifiedorderObj['changeddatetime'] = res.orderOrigins[i].orderHotelModifies[j].dateTime
@@ -120,15 +120,15 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     // there are two conditions: 1) if changed mode = 0 ,we set changed male and change female = 0 else we will
                     // set the female  = count - male
                     if (modifiedorderObj['changedmode'] == 0) {
-                      modifiedorderObj['changedmale'] = 0
-                      modifiedorderObj['changedfemale'] = 0
+                        modifiedorderObj['changedmale'] = 0
+                        modifiedorderObj['changedfemale'] = 0
                     } else {
                         modifiedorderObj['changedmale'] = res.orderOrigins[i].orderHotelModifies[j].countMale
                         modifiedorderObj['changedfemale'] = res.orderOrigins[i].orderHotelModifies[j].count - res.orderOrigins[i].orderHotelModifies[j].countMale
                     }
                     modifiedorder.push(modifiedorderObj)
                 }
-	    }
+            }
             var originorder = {}
             originorder['orderid'] = res.orderOrigins[i].id
             originorder['occupation'] = res.orderOrigins[i].job
@@ -233,7 +233,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     pt['ptid'] = ptid
                     pt['name'] = personalmsgs[0].name
                     //TODO  if the ptname is not null and the pt['name'] not equals ptname, we will break it 
-                    if (ptname != null && ptname != undefined && pt['name'] != ptname) {break}
+                    if (ptname != null && ptname != undefined && pt['name'] != ptname) { break }
                     pt['idnumber'] = personalmsgs[0].idnumber
                     pt['gender'] = personalmsgs[0].gender
                     pt['wechatname'] = "mocked wechat id"
@@ -267,12 +267,12 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     var workhours = 0
                     for (var p = 0; p < resworktime.orderOrigins.length; p++) {
                         for (var q = 0; q < resworktime.orderOrigins[p].orderCandidates.length; q++) {
-                            if (resworktime.orderOrigins[p].orderCandidates[q].remark != null  && resworktime.orderOrigins[p].orderCandidates[q].remark.ptId === ptid) {
+                            if (resworktime.orderOrigins[p].orderCandidates[q].remark != null && resworktime.orderOrigins[p].orderCandidates[q].remark.ptId === ptid) {
                                 workhours = workhours + resworktime.orderOrigins[p].orderCandidates[q].remark.endDate - resworktime.orderOrigins[p].orderCandidates[q].remark.startDate
                             }
                         }
                     }
-              
+
                     pt['workhours'] = Math.round(workhours / 3600)
 
                     pts.push(pt)
@@ -281,11 +281,11 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
             } catch (error) {
                 throw error
             }
-	    if (isModified == true){
-		orderList.unshift(obj)
-	    }else{
-		orderList.push(obj)
-	    }
+            if (isModified == true) {
+                orderList.unshift(obj)
+            } else {
+                orderList.push(obj)
+            }
         }
         return orderList
     } catch (error) {

@@ -34,14 +34,14 @@ const query = {
   async search(parent, args, ctx, info) {
     const id = getUserId(ctx)
     if (args.state == 11) {
-       todo =  await handles.AdviserGetOrderList(ctx,id,args.orderid,0,args.datetime,args.ptname); 
-       doing = await handles.AdviserGetOrderList(ctx,id,args.orderid,1,args.datetime,args.ptname); 
-       Array.prototype.push.apply(todo,doing)
-       return todo
-       } else {
-       return handles.AdviserGetOrderList(ctx, id, args.orderid, args.state, args.datetime,args.ptname)
-       }
-    },
+      todo = await handles.AdviserGetOrderList(ctx, id, args.orderid, 0, args.datetime, args.ptname);
+      doing = await handles.AdviserGetOrderList(ctx, id, args.orderid, 1, args.datetime, args.ptname);
+      Array.prototype.push.apply(todo, doing)
+      return todo
+    } else {
+      return handles.AdviserGetOrderList(ctx, id, args.orderid, args.state, args.datetime, args.ptname)
+    }
+  },
 
   async searchptoforder(parent, args, ctx, info) {
     return handles.GetPtofOrder(ctx, args.orderid)
