@@ -88,17 +88,16 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
     try {
         var request = new messages.QueryRequest()
         if (orderid != null && orderid != undefined) {
-           console.log(orderid) 
            request.setOrderid(orderid)
         }
-        else if (datetime != null && datetime != undefined) {
-            request.setDate(datetime)
+        if (datetime != null && datetime != undefined) {
+           request.setDate(datetime)
         }
-        else if (state != null && state != undefined) {
-          request.setStatus(state + 1)
+        if (state != null && state != undefined) {
+           request.setStatus(state + 1)
         }
-        else if (adviserid != null && adviserid != undefined && datetime == undefined && state == undefined) {
-            request.setAdviser(adviserid)
+        if (adviserid != null && adviserid != undefined) {
+           request.setAdviser(adviserid)
         }
 
         var response = await queryOrder(request);
