@@ -117,8 +117,15 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     modifiedorderObj['changedduration'] = res.orderOrigins[i].orderHotelModifies[j].duration / 3600
                     modifiedorderObj['changedmode'] = res.orderOrigins[i].orderHotelModifies[j].mode
                     modifiedorderObj['changedcount'] = res.orderOrigins[i].orderHotelModifies[j].count
-                    modifiedorderObj['changedmale'] = res.orderOrigins[i].orderHotelModifies[j].countMale
-                    modifiedorderObj['changedfemale'] = res.orderOrigins[i].orderHotelModifies[j].count - res.orderOrigins[i].orderHotelModifies[j].countMale
+                    // there are two conditions: 1) if changed mode = 0 ,we set changed male and change female = 0 else we will
+                    // set the female  = count - male
+                    if (modifiedorderObj['changedmode'] == 0) {
+                      modifiedorderObj['changedmale'] = 0
+                      modifiedorderObj['changedfemale'] = 0
+                    } else {
+                        modifiedorderObj['changedmale'] = res.orderOrigins[i].orderHotelModifies[j].countMale
+                        modifiedorderObj['changedfemale'] = res.orderOrigins[i].orderHotelModifies[j].count - res.orderOrigins[i].orderHotelModifies[j].countMale
+                    }
                     modifiedorder.push(modifiedorderObj)
                 }
 	    }
