@@ -190,6 +190,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
             hotel['hotelphone'] = profiles[0].phone
             hotel['hotelintroduction'] = profiles[0].introduction
             hotel['hoteladdress'] = profiles[0].address
+            hotel['cover'] = profiles[0].cover
 
             var postorder = {}
             if (res.orderOrigins[i].orderAdviserModifies.length != 0) {

@@ -91,6 +91,7 @@ hotelname:String!
 hotelphone:String!
 hotelintroduction:String!
 hoteladdress:String!
+cover:[String]
 }
 
 
