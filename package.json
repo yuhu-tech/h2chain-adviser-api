@@ -1,0 +1,28 @@
+{
+  "name": "h2chain-adviser-api",
+  "version": "1.0.0",
+  "description": "人力资源公司、顾问 proxy api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuhu-tech/h2chain-adviser-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuhu-tech/h2chain-adviser-api/issues"
+  },
+  "homepage": "https://github.com/yuhu-tech/h2chain-adviser-api#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "google-protobuf": "^3.8.0-rc.1",
+    "graphql-yoga": "^1.17.4",
+    "grpc": "^1.20.3",
+    "jsonwebtoken": "^8.5.1",
+    "math": "0.0.3",
+    "request": "^2.88.0"
+  }
+}

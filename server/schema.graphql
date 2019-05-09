@@ -1,0 +1,170 @@
+type Query {
+  me: User!
+  search(orderid:String,state:Int,datetime:Int,ptname:String):[Order]
+  searchptoforder(orderid:String):[Order]
+  mytemplate: Template
+  searchremark(orderid:String!,ptid:String!):Boolean
+  searchhistory(ptid:String!):[Workhistory]
+}
+
+type Mutation {
+  signup(email: String!, password: String!, name: String!,phone:String!): AuthPayload!
+  login(email: String!, password: String!,jscode:String!): AuthPayload!
+  changepassword(oldpassword: String!, newpassword: String!): CPwdPayload!
+  postorder(postorder:InputPostorder!):OrderPayload!
+  createtemplate(type:String!,value:String): Boolean!
+  deletetemplate(type:String!,id:String!):Boolean!
+  modifytemplate(type:String!,id:String!,value:String!):Boolean!
+  updatewechat:Boolean
+  modifyptoforder(orderid:String!,ptid:String!,ptstatus:Int!):Boolean!
+  editremark(orderid:String!,ptid:String!,startdate:Int,enddate:Int,realsalary:Int,isworked:Int!,type:Int!):Boolean
+  closeorder(orderid: String!):OrderPayload
+}
+
+type Workhistory{
+occupation:String
+hotelname:String
+}
+
+
+type Template{
+  workcontents:[Workcontent]
+  attentions:[Attention]
+}
+
+type Workcontent{
+id:ID
+workcontent : String
+}
+
+type Attention{
+id:ID
+attention : String
+}
+
+type Adviser{
+name:String!
+phone:String!
+companyname:String!
+introduction:String
+}
+
+type PtPayload{
+ptid:String
+name:String
+idnumber:String
+gender:Int
+wechatname:String
+phonenumber:String
+worktimes:Int
+height:Int
+weight:Int
+ptorderstate:Int
+remark:Remark
+workhours:Int
+}
+
+type Remark{
+startdate:Int
+enddate:Int
+realsalary:Int
+isworked:Int
+}
+
+
+type Order {
+adviser: Adviser!
+hotel: Hotel!
+state : Int!
+originorder:Originorder!
+modifiedorder:[Modifiedorder]
+maleyet:Int!
+femaleyet:Int!
+countyet:Int!
+postorder:Postorder
+pt:[PtPayload]
+}
+
+
+type Hotel{
+hotelid:String!
+hotelname:String!
+hotelphone:String!
+hotelintroduction:String!
+hoteladdress:String!
+cover:[String]
+}
+
+
+type Originorder{
+  orderid : String!
+  occupation: String!
+  datetime: Int!
+  duration: Int!
+  mode: Int!
+  count: Int!
+  male: Int!
+  female: Int!
+  hotelid: Int!
+  adviserid: Int!
+}
+
+
+type Modifiedorder{
+  orderid: String!
+  changeddatetime: Int!
+  changedduration: Int!
+  changedmode: Int!
+  changedcount: Int!
+  changedmale: Int!
+  changedfemale: Int!
+}
+
+input InputPostorder{
+  orderid: String!
+  salary: Int!
+  workcontent: String
+  attention: String
+  isfloat:Int!
+}
+
+type Postorder{
+  orderid: String!
+  salary: Int
+  workcontent:String
+  attention:String
+  isfloat:Int
+}
+
+type OrderPayload {
+  orderid: String
+  error: Boolean
+}
+
+type CPwdPayload{
+  error : Boolean
+}
+
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id: ID!
+  name:String!
+  email: String!
+  password:String!
+  profile: Profile
+  phone: String
+}
+
+type Profile{
+  id: ID!
+  phone: String!
+  companyname:String!
+  introduction: String
+  user: User!
+}
+
