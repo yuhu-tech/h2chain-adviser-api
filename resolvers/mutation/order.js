@@ -55,11 +55,11 @@ const order = {
       request.setRealsalary(args.realsalary)                           // 实际时薪
       request.setIsworked(args.isworked)                              // 是否参加了工作  必传  状态码： 1 - 表示参加工作  2 - 表示未参加
       request.setType(args.type)
-      client.editRemark(request, function (err, response) {
-      })
+      client.editRemark(request, function (err, response) {})
     } catch (error) {
       throw (error)
     }
+    return true
   }
 }
 

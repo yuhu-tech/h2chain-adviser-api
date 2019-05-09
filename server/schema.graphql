@@ -17,7 +17,7 @@ type Mutation {
   modifytemplate(type:String!,id:String!,value:String!):Boolean!
   updatewechat:Boolean
   modifyptoforder(orderid:String!,ptid:String!,ptstatus:Int!):Boolean!
-  editremark(orderid:String!,ptid:String!,startdate:Int!,enddate:Int!,realsalary:Int,isworked:Int,type:Int):Boolean
+  editremark(orderid:String!,ptid:String!,startdate:Int,enddate:Int,realsalary:Int,isworked:Int!,type:Int!):Boolean
   closeorder(orderid: String!):OrderPayload
 }
 
@@ -68,6 +68,7 @@ type Remark{
 startdate:Int
 enddate:Int
 realsalary:Int
+isworked:Int
 }
 
 

@@ -242,7 +242,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     var personalmsg = personalmsgs[0]
                     pt['height'] = personalmsgs[0].height
                     pt['weight'] = personalmsgs[0].weight
-                    //here we retrieve ptorder state                
+                    //here we retrieve ptorder state
                     pt['ptorderstate'] = response.array[0][k][7]
 
                     var requestremark = new messages.QueryRemarkRequest()
@@ -255,6 +255,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                         remark['enddate'] = resremark.orderCandidates[0].remark.endDate
                         remark['realsalary'] = resremark.orderCandidates[0].remark.realSalary
                         remark['startdate'] = resremark.orderCandidates[0].remark.startDate
+                        remark['isworked'] = resremark.orderCandidates[0].remark.isWorked
                         pt['remark'] = remark
                     }
                     //retrieve worktimes the number of orderorigins
