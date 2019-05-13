@@ -3,6 +3,9 @@ const messages = require('../../grpc/mutation/mutation_pb');
 const services = require('../../grpc/mutation/mutation_grpc_pb');
 const grpc = require('grpc');
 const config = require('../../conf/config')
+const sd = require('silly-datetime')
+const formid = require('../../msg/msghandle/formid/redis')
+const sendtoh = require('../../msg/msghandle/sendmsg/hotelmsg')
 const client = new services.MutationClient(config.localip, grpc.credentials.createInsecure());
 
 
@@ -16,6 +19,29 @@ const order = {
     request.setAttention(args.postorder.attention);                   //注意事项
     client.postOrder(request, function (err, response) {
     });
+
+    // set formid which is created when adviser post order
+    var userId = ''
+    var orderId = ''
+    var formId = ''
+    var setRes = await formid.setFormId(userId, orderId, formId)
+    console.log('set formid after creating :', setRes)
+
+    // send msg to hotel after posting
+    var HotelMsgData = {
+      userId: '',
+      orderId: '',
+      openId: '',
+      num: 1,
+      content: {
+        keyword1: '',
+        keyword2: '',
+        keyword3: sd.format(new Date(), 'YYYY/MM/DD HH:mm'),
+      }
+    }
+    var sendHRes = await sendtoh.sendTemplateMsgToHotel(HotelMsgData);
+    console.log('send msg to hotel after posting', sendHRes)
+
     var error = false
     return error
   },
@@ -55,7 +81,7 @@ const order = {
       request.setRealsalary(args.realsalary)                           // 实际时薪
       request.setIsworked(args.isworked)                              // 是否参加了工作  必传  状态码： 1 - 表示参加工作  2 - 表示未参加
       request.setType(args.type)
-      client.editRemark(request, function (err, response) {})
+      client.editRemark(request, function (err, response) { })
     } catch (error) {
       throw (error)
     }
