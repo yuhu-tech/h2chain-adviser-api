@@ -130,6 +130,8 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                 }
             }
             var originorder = {}
+            originorder['hotelid'] = res.orderOrigins[i].hotelId
+            originorder['adviserid'] = res.orderOrigins[i].adviserId
             originorder['orderid'] = res.orderOrigins[i].id
             originorder['occupation'] = res.orderOrigins[i].job
             originorder['datetime'] = res.orderOrigins[i].datetime

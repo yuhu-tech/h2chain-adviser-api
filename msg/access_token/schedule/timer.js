@@ -5,5 +5,7 @@ async function timer(){
     await refresh.refreshAdviserAT();
     await refresh.refreshPtAT();
 }
-timer()
-setInterval(timer,3600*1000)
+
+
+module.exports = {timer}
+

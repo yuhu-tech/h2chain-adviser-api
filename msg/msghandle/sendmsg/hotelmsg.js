@@ -9,11 +9,13 @@ async function sendTemplateMsgToHotel(HotelMsgData) {
         //获取access_token 拼接url
         var num = 1
         var access_token = await rds.getAccessToken(num)
+        console.log("now the access_token is ..."+access_token)
         const url = `https://api.weixin.qq.com/cgi-bin/message/wxopen/template/send?access_token=${access_token}`
 
         //获取field和formId
         var key = HotelMsgData.userId + HotelMsgData.orderId
         var getRes = await formId.getFormId(key);
+        console.log("form id is ..."+getRes)
 
         //获取消息模版,拼接消息内容
         var templateId = ''
@@ -52,10 +54,11 @@ async function sendTemplateMsgToHotel(HotelMsgData) {
         const requestData = {
             "touser": HotelMsgData.openId,
             "template_id": templateId,
-            "page": "index",
+            "page": "index?foo=bar",
             "form_id": getRes.formId,
             "data": data,
         };
+        console.log("requestdata is .."+JSON.stringify(requestData));
 
         // 发送模版消息
         await request({

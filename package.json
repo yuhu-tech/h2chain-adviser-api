@@ -23,6 +23,8 @@
     "grpc": "^1.20.3",
     "jsonwebtoken": "^8.5.1",
     "math": "0.0.3",
-    "request": "^2.88.0"
+    "redis": "^2.8.0",
+    "request": "^2.88.0",
+    "silly-datetime": "^0.1.2"
   }
 }
