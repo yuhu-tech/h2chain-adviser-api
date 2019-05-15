@@ -235,7 +235,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     pt['ptid'] = ptid
                     pt['name'] = personalmsgs[0].name
                     //TODO  if the ptname is not null and the pt['name'] not equals ptname, we will break it 
-                    if (ptname != null && ptname != undefined && pt['name'] != ptname) { break }
+                    if (ptname != null && ptname != undefined && pt['name'].indexOf(ptname) != -1) { break }
                     pt['idnumber'] = personalmsgs[0].idnumber
                     pt['gender'] = personalmsgs[0].gender
                     pt['wechatname'] = "mocked wechat id"

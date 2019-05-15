@@ -40,12 +40,11 @@ const order = {
     var advisercompany = profiles[0].companyname
     var occupation = todo[0].originorder.occupation
     if (todo[0].modifiedorder.length){
-    var startdate = todo[0].modifiedorder[0].changeddatetime
+    var datetime = todo[0].modifiedorder[0].changeddatetime
     } else {
-    var startdate = todo[0].originorder.datetime
+    var datetime = todo[0].originorder.datetime
     }
-    
-
+    var date = new Date(datetime)
     var HotelMsgData = {
       userId: todo[0].originorder.hotelid,
       orderId: todo[0].originorder.orderid,
@@ -53,7 +52,7 @@ const order = {
       num: 1,
       content: {
         keyword1: advisercompany + ' '+ advisername,
-        keyword2: startdate + ' ' + occupation,
+        keyword2: date.getFullYear()+'年'+date.getMonth()+'月'+date.getDate()+'日'+date.getHours()+'时开始' + ' ' + occupation,
         keyword3: sd.format(new Date(), 'YYYY/MM/DD HH:mm'),
       }
     }
