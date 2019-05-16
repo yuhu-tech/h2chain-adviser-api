@@ -48,9 +48,9 @@ async function AdviserSearchHistory(ctx, ptid) {
     var res = JSON.parse(response.array[0])
     var history = []
     if (res.orderOrigins.length < 5) {
-        var worked = {}
         for (i = 0; i < res.orderOrigins.length; i++) {
             //worked['hotelid'] = res.orderOrigins[i].hotelId;
+            var worked = {}
             worked['occupation'] = res.orderOrigins[i].job;
             var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
             var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: res.orderOrigins[i].hotelId } } })
@@ -58,9 +58,9 @@ async function AdviserSearchHistory(ctx, ptid) {
             history.push(worked)
         }
     } else {
-        var worked = {}
         for (i = 0; i < 5; i++) {
             //worked['hotelid'] = res.orderOrigins[i].hotelID;
+            var worked = {}
             worked['occupation'] = res.orderOrigins[i].job;
             var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
             var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: res.orderOrigins[i].hotelId } } })
