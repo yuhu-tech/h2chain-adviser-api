@@ -44,7 +44,7 @@ const order = {
     } else {
     var datetime = todo[0].originorder.datetime
     }
-    var date = new Date(datetime)
+    var date = new Date(datetime*1000)
     var HotelMsgData = {
       userId: todo[0].originorder.hotelid,
       orderId: todo[0].originorder.orderid,
