@@ -8,6 +8,7 @@ const formid = require('../../msg/msghandle/formid/redis')
 const sendtoh = require('../../msg/msghandle/sendmsg/hotelmsg')
 const client = new services.MutationClient(config.localip, grpc.credentials.createInsecure());
 const handles = require('../handle/adviser')
+const sendtop = require('../../msg/msghandle/sendmsg/ptmsg')
 
 const order = {
   async postorder(parent, args, ctx, info) {
@@ -64,6 +65,8 @@ const order = {
 
   async modifyptoforder(parent, args, ctx, info) {
     try {
+      const id = getUserId(ctx)
+      todo = await handles.AdviserGetOrderList(ctx, id, args.orderid, 1)
       var request = new messages.ModifyPtRequest();
       request.setOrderid(args.orderid);       // OrderID 必传
       request.setPtid(args.ptid);
@@ -71,6 +74,43 @@ const order = {
       // we will refuse anyone whatever his status is   
       // request.setSourcestatus(1);                           // PT 原始状态  
       client.modifyPTOfOrder(request, function (err, response) { })
+      // to generate and save orderid
+      var userId = id
+      var orderId = args.orderid
+      var formId = args.formid
+      var setRes = await formid.setFormId(userId, orderId, formId)
+      console.log('set formid after creating :', setRes)
+      // to send msgs to a pt
+      var advisers  = await ctx.prismaHr.users({where:{id:id}})
+      var profiles = await ctx.prismaHr.profiles({where:{user:{id:advisers[0].id}}})
+      var advisername = advisers[0].name
+      var advisercompany = profiles[0].companyname
+      var occupation = todo[0].originorder.occupation
+      if (todo[0].modifiedorder.length){
+        var datetime = todo[0].modifiedorder[0].changeddatetime
+      } else {
+        var datetime = todo[0].originorder.datetime
+      }
+      var date = new Date(datetime*1000)
+      if (args.ptstatus == 2) {
+        for (i=0; i<todo[0].pt.length;i++){
+          var users = await ctx.prismaClient.users({ where: { id: todo[0].pt[i].ptid } } )
+          var openId = users[0].wechat
+          var PtMsgData = {
+          userId: todo[0].pt[i].ptid,
+          orderId: args.orderid,
+          openId: openId,
+          num: 2,
+          content: {
+            keyword1: date.getFullYear()+'年'+date.getMonth()+'月'+date.getDate()+'日'+date.getHours()+'时开始' + ' ' + occupation,
+            keyword2: "对不起，您申请的职位没有通过哦，下次再接再厉！",
+            keyword3: advisercompany + '' + advisername,
+          }
+        }
+         var sendPRes = await sendtop.sendTemplateMsgToPt(PtMsgData)
+         console.log('send msg to pt after refusing', sendPRes)
+        }
+      }
       return true
     } catch (error) {
       throw (error)
@@ -81,8 +121,7 @@ const order = {
     var client = new services.MutationClient(config.localip, grpc.credentials.createInsecure());
     var request = new messages.CloseRequest();
     request.setOrderid(args.orderid)
-    client.closeOrder(request, function (err, response) {
-    })
+    client.closeOrder(request, function (err, response) { })
   },
 
   async editremark(parent, args, ctx, info) {
