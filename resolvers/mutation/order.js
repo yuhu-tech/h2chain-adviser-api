@@ -71,7 +71,7 @@ const order = {
       request.setOrderid(args.orderid);       // OrderID 必传
       request.setPtid(args.ptid);
       request.setTargetstatus(args.ptstatus);                           // PT 目标状态 筛选条件，不同传 -1
-      // we will refuse anyone whatever his status is   
+      // we will refuse anyone whatever his status is
       // request.setSourcestatus(1);                           // PT 原始状态  
       client.modifyPTOfOrder(request, function (err, response) { })
       // to generate and save orderid
@@ -92,12 +92,12 @@ const order = {
         var datetime = todo[0].originorder.datetime
       }
       var date = new Date(datetime*1000)
+      //NOTE: ONLY the refusedn PTs will receive the message
       if (args.ptstatus == 2) {
-        for (i=0; i<todo[0].pt.length;i++){
-          var users = await ctx.prismaClient.users({ where: { id: todo[0].pt[i].ptid } } )
+          var users = await ctx.prismaClient.users({ where: { id: args.ptid } } )
           var openId = users[0].wechat
           var PtMsgData = {
-          userId: todo[0].pt[i].ptid,
+          userId: args.ptid,
           orderId: args.orderid,
           openId: openId,
           num: 2,
@@ -109,7 +109,6 @@ const order = {
         }
          var sendPRes = await sendtop.sendTemplateMsgToPt(PtMsgData)
          console.log('send msg to pt after refusing', sendPRes)
-        }
       }
       return true
     } catch (error) {
