@@ -53,7 +53,7 @@ const order = {
       num: 1,
       content: {
         keyword1: advisercompany + ' '+ advisername,
-        keyword2: date.getFullYear()+'年'+ date.getMonth()+1 +'月'+date.getDate()+'日'+date.getHours()+'时开始' + ' ' + occupation,
+        keyword2: date.getFullYear()+'年'+ (date.getMonth()+1) +'月'+date.getDate()+'日'+date.getHours()+'时开始' + ' ' + occupation,
         keyword3: sd.format(new Date(), 'YYYY/MM/DD HH:mm'),
       }
     }
@@ -102,7 +102,7 @@ const order = {
           openId: openId,
           num: 2,
           content: {
-            keyword1: date.getFullYear()+'年'+date.getMonth()+1 +'月'+date.getDate()+'日'+date.getHours()+'时开始' + ' ' + occupation,
+            keyword1: date.getFullYear()+'年'+(date.getMonth()+1) +'月'+date.getDate()+'日'+date.getHours()+'时开始' + ' ' + occupation,
             keyword2: "对不起，您申请的职位没有通过哦，下次再接再厉！",
             keyword3: advisercompany + '' + advisername,
           }
