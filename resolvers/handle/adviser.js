@@ -234,7 +234,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     var pt = {}
                     pt['ptid'] = ptid
                     pt['name'] = personalmsgs[0].name
-                    //TODO  if the ptname is not null and the pt['name'] not equals ptname, we will break it 
+                    //TODO  if the ptname is not null and the pt['name'] not equals ptname, we will break it
                     if (ptname != null && ptname != undefined && pt['name'].indexOf(ptname) == -1) { continue }
                     pt['idnumber'] = personalmsgs[0].idnumber
                     pt['gender'] = personalmsgs[0].gender
@@ -246,7 +246,8 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     pt['weight'] = personalmsgs[0].weight
                     //here we retrieve ptorder state
                     pt['ptorderstate'] = response.array[0][k][7]
-
+                    var contracts = ctx.prismaHotel.contracts({where:{AND:[{orderid:res.orderOrigins[i].id},{ptid:ptid}]}})
+                    pt['hash'] = contracts[0].hash
                     var requestremark = new messages.QueryRemarkRequest()
                     requestremark.setOrderid(res.orderOrigins[i].id)
                     requestremark.setPtid(ptid)
