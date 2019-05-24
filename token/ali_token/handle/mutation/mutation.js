@@ -2,7 +2,6 @@ const Chain = require("@alipay/mychain/index.node") //在 node 环境使用 TLS 
 const env = require("../env/env")
 const fs = require('fs')
 const path = require('path')
-
 const abi = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../contracts/MyToken_sol_MyToken.abi'), String))
 const contractName = 'MyTokenv2.0.3'
 // 使用新创建的key创建账户
@@ -41,7 +40,8 @@ function Issue(to, value) {
         reject(err)
         console.log(data)
       } else {
-        resolve({ output })
+        var txhash = data.txhash
+        resolve({ txhash, output })
       }
     })
   })
@@ -70,7 +70,8 @@ function Transfer(from, publicKey, privateKey, to, value) {
         reject(err)
         console.log(data)
       } else {
-        resolve({ output })
+        var txhash = data.txhash
+        resolve({ txhash, output })
       }
     })
   })
@@ -89,7 +90,8 @@ function NativeDepositData(hashData) {
         reject(Error('native deposit data failed', err))
       } else {
         var txhash = data.txhash
-        resolve({txhash})
+        var blockNumber = data.block_number
+        resolve({ txhash, blockNumber })
       }
     })
   })
