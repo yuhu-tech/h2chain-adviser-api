@@ -247,7 +247,9 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     //here we retrieve ptorder state
                     pt['ptorderstate'] = response.array[0][k][7]
                     var contracts = ctx.prismaHotel.contracts({where:{AND:[{orderid:res.orderOrigins[i].id},{ptid:ptid}]}})
+                    if (contracts[0] != undefined){
                     pt['hash'] = contracts[0].hash
+                    }
                     var requestremark = new messages.QueryRemarkRequest()
                     requestremark.setOrderid(res.orderOrigins[i].id)
                     requestremark.setPtid(ptid)

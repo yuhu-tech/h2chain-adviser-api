@@ -28,8 +28,8 @@ const order = {
     var setRes = await formid.setFormId(userId, orderId, formId)
     console.log('set formid after creating :', setRes)
 
-    todo = await handles.AdviserGetOrderList(ctx, id, args.postorder.orderid, 0)
-    doing = await handles.AdviserGetOrderList(ctx, id, args.postorder.orderid, 1)
+    var todo = await handles.AdviserGetOrderList(ctx, id, args.postorder.orderid, 0)
+    var doing = await handles.AdviserGetOrderList(ctx, id, args.postorder.orderid, 1)
     Array.prototype.push.apply(todo, doing)
     var hotelUsers = await ctx.prismaHotel.users({ where: { id: todo[0].originorder.hotelid } })
     // send msg to hotel after posting

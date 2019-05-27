@@ -41,7 +41,8 @@ function Issue(to, value) {
         reject(err)
         console.log(data)
       } else {
-        resolve({ output })
+        var txhash = data.txhash
+        resolve({ txhash ,output })
       }
     })
   })
@@ -70,7 +71,8 @@ function Transfer(from, publicKey, privateKey, to, value) {
         reject(err)
         console.log(data)
       } else {
-        resolve({ output })
+        var txhash = data.txhash
+        resolve({ txhash , output })
       }
     })
   })
