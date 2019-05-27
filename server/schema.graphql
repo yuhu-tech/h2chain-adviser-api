@@ -4,7 +4,29 @@ type Query {
   searchptoforder(orderid:String):[Order]
   mytemplate: Template
   searchremark(orderid:String!,ptid:String!):Boolean
+  searchhash(txhash: String!): BcPayload
   searchhistory(ptid:String!):[Workhistory]
+}
+
+type BcPayload{
+  chainname:String
+  hotelcer: String
+  hoteladdr: String
+  hotelhrname: String
+  hotelname: String
+  advisercer: String
+  adviseraddr: String
+  advisername: String
+  adviserhrname: String
+  ptcer: String
+  ptaddr: String
+  ptname: String
+  contractaddress: String
+  blocknumber: Int
+  hash:String
+  occupation: String
+  datetime: Int
+  isrefused: Int
 }
 
 type Mutation {
@@ -22,8 +44,8 @@ type Mutation {
 }
 
 type Workhistory{
-occupation:String
-hotelname:String
+  occupation:String
+  hotelname:String
 }
 
 
@@ -33,42 +55,43 @@ type Template{
 }
 
 type Workcontent{
-id:ID
-workcontent : String
+  id:ID
+  workcontent : String
 }
 
 type Attention{
-id:ID
-attention : String
+  id:ID
+  attention : String
 }
 
 type Adviser{
-name:String!
-phone:String!
-companyname:String!
-introduction:String
+  name:String!
+  phone:String!
+  companyname:String!
+  introduction:String
 }
 
 type PtPayload{
-ptid:String
-name:String
-idnumber:String
-gender:Int
-wechatname:String
-phonenumber:String
-worktimes:Int
-height:Int
-weight:Int
-ptorderstate:Int
-remark:Remark
-workhours:Int
+  ptid:String
+  name:String
+  idnumber:String
+  gender:Int
+  wechatname:String
+  phonenumber:String
+  worktimes:Int
+  height:Int
+  weight:Int
+  ptorderstate:Int
+  remark:Remark
+  workhours:Int
+  hash:String
 }
 
 type Remark{
-startdate:Int
-enddate:Int
-realsalary:Int
-isworked:Int
+  startdate:Int
+  enddate:Int
+  realsalary:Int
+  isworked:Int
 }
 
 

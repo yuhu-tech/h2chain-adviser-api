@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/yuhu-tech/h2chain-adviser-api#readme",
   "dependencies": {
+    "aes-js": "^3.1.2",
     "bcryptjs": "^2.4.3",
     "google-protobuf": "^3.8.0-rc.1",
     "graphql-yoga": "^1.17.4",
