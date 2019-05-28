@@ -246,7 +246,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     pt['weight'] = personalmsgs[0].weight
                     //here we retrieve ptorder state
                     pt['ptorderstate'] = response.array[0][k][7]
-                    var contracts = ctx.prismaHotel.contracts({where:{AND:[{orderid:res.orderOrigins[i].id},{ptid:ptid}]}})
+                    var contracts = await ctx.prismaHotel.contracts({where:{AND:[{orderid:res.orderOrigins[i].id},{ptid:ptid}]}})
                     if (contracts[0] != undefined){
                     pt['hash'] = contracts[0].hash
                     }
