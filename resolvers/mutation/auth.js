@@ -1,7 +1,8 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { getUserId, getOpenId } = require('../../utils/utils')
-const { CreateAccount } = require('../../../h2chain-pt-api/token/ali_token/handle/mutation/mutation')
+const { CreateAccount }  = require('../../token/ali_token/handle/mutation/mutation')
+const { QueryAccount } = require('../../token/ali_token/handle/query/query')
 
 const auth = {
   async signup(parent, args, ctx, info) {
@@ -45,14 +46,24 @@ const auth = {
       var updatekeys = await ctx.prismaHr.updateProfile(
         {
           data: {
-            privatekey: keys.privatekey,
-            publickey: keys.publickey,
+            privatekey: keys.privateKey,
+            publickey: keys.publicKey,
           },
           where: { id: profiles[0].id }
         }
       )
+      //更新钱包信息
+      var identity = await QueryAccount(personalmsg.id)
+      var updateidentity = await ctx.prismaHr.updatePersonalmsg(
+        {
+          data: {
+            ptadd: identity.identity
+          },
+          where: { id: personalmsg.id }
+        }
+      )
+      console.log("更新钱包信息成功")
     }
-
     return {
       token: jwt.sign({ userId: user.id }, 'jwtsecret123'),
       user
