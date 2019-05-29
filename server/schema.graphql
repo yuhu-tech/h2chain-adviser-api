@@ -113,8 +113,13 @@ femaleyet:Int!
 countyet:Int!
 postorder:Postorder
 pt:[PtPayload]
+agent:[AgentPayload]
 }
 
+type AgentPayload{
+  agentid: String
+  name: String
+}
 
 type Hotel{
 hotelid:String!
