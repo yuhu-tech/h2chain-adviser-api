@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { getUserId, getOpenId } = require('../../utils/utils')
+const { CreateAccount } = require('../../../h2chain-pt-api/token/ali_token/handle/mutation/mutation')
 
 const auth = {
   async signup(parent, args, ctx, info) {
@@ -36,6 +37,22 @@ const auth = {
     } catch (error) {
       throw (error)
     }
+
+    var profiles = await ctx.prismaHr.profiles({ where: { user: { id: user.id } } })
+    if (profiles[0].adviseradd == null) {
+      var keys = await CreateAccount(profiles[0].id)
+      console.log(keys)
+      var updatekeys = await ctx.prismaHr.updateProfile(
+        {
+          data: {
+            privatekey: keys.privatekey,
+            publickey: keys.publickey,
+          },
+          where: { id: profiles[0].id }
+        }
+      )
+    }
+
     return {
       token: jwt.sign({ userId: user.id }, 'jwtsecret123'),
       user
