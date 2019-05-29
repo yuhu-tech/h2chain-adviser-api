@@ -6,6 +6,7 @@ type Query {
   searchremark(orderid:String!,ptid:String!):Boolean
   searchhash(txhash: String!): BcPayload
   searchhistory(ptid:String!):[Workhistory]
+  mywallet:String
 }
 
 type BcPayload{
