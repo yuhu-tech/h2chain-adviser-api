@@ -58,7 +58,6 @@ async function sendTemplateMsgToHotel(HotelMsgData) {
             "form_id": getRes.formId,
             "data": data,
         };
-        console.log("requestdata is .."+JSON.stringify(requestData));
 
         // 发送模版消息
         await request({

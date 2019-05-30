@@ -48,8 +48,6 @@ const query = {
       todo = await handles.AdviserGetOrderList(ctx, id, args.orderid, 0, args.datetime, args.ptname, args.type, args.inviterid);
       doing = await handles.AdviserGetOrderList(ctx, id, args.orderid, 1, args.datetime, args.ptname, args.type, args.inviterid);
       Array.prototype.push.apply(todo, doing)
-      console.log(todo)
-      console.log(doing)
       return todo
     } else {
       return handles.AdviserGetOrderList(ctx, id, args.orderid, args.state, args.datetime, args.ptname, args.type, args.inviterid)

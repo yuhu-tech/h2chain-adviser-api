@@ -12,7 +12,6 @@ type Query {
 type Walletmsg{
   adviseraddr:String
   balance:Int
-  transactions:[Tx]
 }
 
 type BcPayload{
@@ -92,6 +91,8 @@ type PtPayload{
   remark:Remark
   workhours:Int
   hash:String
+  type:Int
+  inviterid:String
 }
 
 type Remark{

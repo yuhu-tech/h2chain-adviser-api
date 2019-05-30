@@ -114,6 +114,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
 
         var orderList = []
         for (var i = 0; i < res.orderOrigins.length; i++) {
+            console.log()
             var obj = {}
             var modifiedorder = []
             var isModified = false
@@ -253,7 +254,6 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     var pt = {}
                     pt['ptid'] = ptid
                     pt['name'] = personalmsgs[0].name
-                    //TODO  if the ptname is not null and the pt['name'] not equals ptname, we will break it
                     if (ptname != null && ptname != undefined && pt['name'].indexOf(ptname) == -1) { continue }
                     pt['idnumber'] = personalmsgs[0].idnumber
                     pt['gender'] = personalmsgs[0].gender
@@ -265,6 +265,8 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     pt['weight'] = personalmsgs[0].weight
                     //here we retrieve ptorder state
                     pt['ptorderstate'] = response.array[0][k][7]
+                    pt['type'] = response.array[0][k][8]
+                    pt['inviterid'] = response.array[0][k][9]
                     var contracts = await ctx.prismaHotel.contracts({where:{AND:[{orderid:res.orderOrigins[i].id},{ptid:ptid}]}})
                     if (contracts[0] != undefined){
                     pt['hash'] = contracts[0].hash
@@ -297,9 +299,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                             }
                         }
                     }
-
                     pt['workhours'] = Math.round(workhours / 3600)
-
                     pts.push(pt)
                 }
                 obj['pt'] = pts
@@ -307,13 +307,13 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                 // 获取订单的代理列表
                 var request = new messages.QueryAgentRequest()
                 request.setOrderid(res.orderOrigins[i].id)
-
+                console.log(res.orderOrigins[i].id)
                 var response = await queryAgentOfOrder(request)
-                var res = JSON.parse(response.array[0])
+                var resagent = JSON.parse(response.array[0])
                 var agents = []
-                for (var i = 0;i<res.orderOrigin.orderCandidates.length;i++){
+                for (var k = 0; k< resagent.orderOrigin.orderCandidates.length;k++){
                      var agent = {}
-                     var inviterId = res.orderOrigin.orderCandidates[i].inviterId
+                     var inviterId = resagent.orderOrigin.orderCandidates[k].inviterId
                      //TODO 通过 inviterId 查出 agent 名字填入
                      agent['agentid'] = inviterId
                      agent['name'] = "tdergouzi"
