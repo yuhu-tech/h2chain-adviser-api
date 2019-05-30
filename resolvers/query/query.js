@@ -22,6 +22,15 @@ const query = {
     return result
   },
 
+  async mywallet(parent,args,ctx,info){
+    var id = getUserId(ctx)
+    const profiles = await ctx.prismaHr.profiles({where:{user:{id:id}}})
+    return {
+      adviseraddr: profiles[0].adviseradd,
+      balance: 0 
+    }
+  },
+
   async mytemplate(parent, args, ctx, info) {
     const id = getUserId(ctx)
     const workcontents = await ctx.prismaHr.workcontents({ where: { userid: id } })

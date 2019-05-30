@@ -6,6 +6,13 @@ type Query {
   searchremark(orderid:String!,ptid:String!):Boolean
   searchhash(txhash: String!): BcPayload
   searchhistory(ptid:String!):[Workhistory]
+  mywallet(skip:Int!,time:Int): Walletmsg
+}
+
+type Walletmsg{
+  adviseraddr:String
+  balance:Int
+  transactions:[Tx]
 }
 
 type BcPayload{
@@ -106,8 +113,13 @@ femaleyet:Int!
 countyet:Int!
 postorder:Postorder
 pt:[PtPayload]
+agent:[AgentPayload]
 }
 
+type AgentPayload{
+  agentid: String
+  name: String
+}
 
 type Hotel{
 hotelid:String!
