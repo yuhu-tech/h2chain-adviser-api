@@ -15,9 +15,18 @@ function queryOrder(request) {
 
 function queryPt(request) {
     return new Promise((resolve, reject) => {
-        client.queryPTOfOrder(request, (err, date) => {
+        client.queryPTOfOrder(request, (err, data) => {
             if (err) reject(err);
-            resolve(date);
+            resolve(data);
+        })
+    })
+}
+
+function queryAgentOfOrder(request) {
+    return new Promise((resolve,reject)=>{
+        client.queryAgentOfOrder(request,(err,data)=>{
+            if (err) reject(err);
+            resolve(data)
         })
     })
 }
@@ -84,7 +93,7 @@ async function GetPtofOrder(ctx, orderid) {
 }
 
 
-async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptname) {
+async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptname, type, inviterid) {
     try {
         var request = new messages.QueryRequest()
         if (orderid != null && orderid != undefined) {
@@ -217,6 +226,16 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                 var request = new messages.QueryPTRequest();
                 request.setOrderid(res.orderOrigins[i].id);
                 request.setPtstatus(13);
+
+                if (type != null && type != undefined) {
+                    request.setType(type)
+                    if (type == 3){
+                        if (inviterid != null && inviterid != undefined) {
+                            request.setInviterid(inviterid)
+                        }
+                    }
+                }
+
                 var response = await queryPt(request)
                 obj['countyet'] = response.array[0].length
                 //initial obj[maleyet] and obj[femaleyet]
@@ -284,6 +303,24 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     pts.push(pt)
                 }
                 obj['pt'] = pts
+
+                // 获取订单的代理列表
+                var request = new messages.QueryAgentRequest()
+                request.setOrderid(res.orderOrigins[i].id)
+
+                var response = await queryAgentOfOrder(request)
+                var res = JSON.parse(response.array[0])
+                var agents = []
+                for (var i = 0;i<res.orderOrigin.orderCandidates.length;i++){
+                     var agent = {}
+                     var inviterId = res.orderOrigin.orderCandidates[i].inviterId
+                     //TODO 通过 inviterId 查出 agent 名字填入
+                     agent['agentid'] = inviterId
+                     agent['name'] = "tdergouzi"
+                     agents.push(agent)
+                }
+                obj['agent'] = agents
+
             } catch (error) {
                 throw error
             }

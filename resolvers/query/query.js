@@ -45,14 +45,14 @@ const query = {
   async search(parent, args, ctx, info) {
     const id = getUserId(ctx)
     if (args.state == 11) {
-      todo = await handles.AdviserGetOrderList(ctx, id, args.orderid, 0, args.datetime, args.ptname);
-      doing = await handles.AdviserGetOrderList(ctx, id, args.orderid, 1, args.datetime, args.ptname);
+      todo = await handles.AdviserGetOrderList(ctx, id, args.orderid, 0, args.datetime, args.ptname, args.type, args.inviterid);
+      doing = await handles.AdviserGetOrderList(ctx, id, args.orderid, 1, args.datetime, args.ptname, args.type, args.inviterid);
       Array.prototype.push.apply(todo, doing)
       console.log(todo)
       console.log(doing)
       return todo
     } else {
-      return handles.AdviserGetOrderList(ctx, id, args.orderid, args.state, args.datetime, args.ptname)
+      return handles.AdviserGetOrderList(ctx, id, args.orderid, args.state, args.datetime, args.ptname, args.type, args.inviterid)
     }
   },
 
