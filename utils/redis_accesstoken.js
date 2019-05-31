@@ -57,8 +57,10 @@ var getAccessToken = async function (num) {
             key = 'adviser'
         } else if (num === 3) {
             key = 'pt'
+        } else if (nuk === 4) {
+            key = 'agent'
         } else {
-
+            
         }
         await clientOn
         var res = await clientGet(key)             
