@@ -15,9 +15,18 @@ function queryOrder(request) {
 
 function queryPt(request) {
     return new Promise((resolve, reject) => {
-        client.queryPTOfOrder(request, (err, date) => {
+        client.queryPTOfOrder(request, (err, data) => {
             if (err) reject(err);
-            resolve(date);
+            resolve(data);
+        })
+    })
+}
+
+function queryAgentOfOrder(request) {
+    return new Promise((resolve,reject)=>{
+        client.queryAgentOfOrder(request,(err,data)=>{
+            if (err) reject(err);
+            resolve(data)
         })
     })
 }
@@ -48,9 +57,9 @@ async function AdviserSearchHistory(ctx, ptid) {
     var res = JSON.parse(response.array[0])
     var history = []
     if (res.orderOrigins.length < 5) {
-        var worked = {}
         for (i = 0; i < res.orderOrigins.length; i++) {
             //worked['hotelid'] = res.orderOrigins[i].hotelId;
+            var worked = {}
             worked['occupation'] = res.orderOrigins[i].job;
             var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
             var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: res.orderOrigins[i].hotelId } } })
@@ -58,9 +67,9 @@ async function AdviserSearchHistory(ctx, ptid) {
             history.push(worked)
         }
     } else {
-        var worked = {}
         for (i = 0; i < 5; i++) {
             //worked['hotelid'] = res.orderOrigins[i].hotelID;
+            var worked = {}
             worked['occupation'] = res.orderOrigins[i].job;
             var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
             var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: res.orderOrigins[i].hotelId } } })
@@ -84,7 +93,7 @@ async function GetPtofOrder(ctx, orderid) {
 }
 
 
-async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptname) {
+async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptname, type, inviterid) {
     try {
         var request = new messages.QueryRequest()
         if (orderid != null && orderid != undefined) {
@@ -105,6 +114,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
 
         var orderList = []
         for (var i = 0; i < res.orderOrigins.length; i++) {
+            console.log()
             var obj = {}
             var modifiedorder = []
             var isModified = false
@@ -130,6 +140,8 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                 }
             }
             var originorder = {}
+            originorder['hotelid'] = res.orderOrigins[i].hotelId
+            originorder['adviserid'] = res.orderOrigins[i].adviserId
             originorder['orderid'] = res.orderOrigins[i].id
             originorder['occupation'] = res.orderOrigins[i].job
             originorder['datetime'] = res.orderOrigins[i].datetime
@@ -215,6 +227,16 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                 var request = new messages.QueryPTRequest();
                 request.setOrderid(res.orderOrigins[i].id);
                 request.setPtstatus(13);
+
+                if (type != null && type != undefined) {
+                    request.setType(type)
+                    if (type == 3){
+                        if (inviterid != null && inviterid != undefined) {
+                            request.setInviterid(inviterid)
+                        }
+                    }
+                }
+
                 var response = await queryPt(request)
                 obj['countyet'] = response.array[0].length
                 //initial obj[maleyet] and obj[femaleyet]
@@ -232,8 +254,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     var pt = {}
                     pt['ptid'] = ptid
                     pt['name'] = personalmsgs[0].name
-                    //TODO  if the ptname is not null and the pt['name'] not equals ptname, we will break it 
-                    if (ptname != null && ptname != undefined && pt['name'] != ptname) { break }
+                    if (ptname != null && ptname != undefined && pt['name'].indexOf(ptname) == -1) { continue }
                     pt['idnumber'] = personalmsgs[0].idnumber
                     pt['gender'] = personalmsgs[0].gender
                     pt['wechatname'] = "mocked wechat id"
@@ -244,7 +265,12 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     pt['weight'] = personalmsgs[0].weight
                     //here we retrieve ptorder state
                     pt['ptorderstate'] = response.array[0][k][7]
-
+                    pt['type'] = response.array[0][k][8]
+                    pt['inviterid'] = response.array[0][k][9]
+                    var contracts = await ctx.prismaHotel.contracts({where:{AND:[{orderid:res.orderOrigins[i].id},{ptid:ptid}]}})
+                    if (contracts[0] != undefined){
+                    pt['hash'] = contracts[0].hash
+                    }
                     var requestremark = new messages.QueryRemarkRequest()
                     requestremark.setOrderid(res.orderOrigins[i].id)
                     requestremark.setPtid(ptid)
@@ -273,12 +299,28 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                             }
                         }
                     }
-
                     pt['workhours'] = Math.round(workhours / 3600)
-
                     pts.push(pt)
                 }
                 obj['pt'] = pts
+
+                // 获取订单的代理列表
+                var request = new messages.QueryAgentRequest()
+                request.setOrderid(res.orderOrigins[i].id)
+                console.log(res.orderOrigins[i].id)
+                var response = await queryAgentOfOrder(request)
+                var resagent = JSON.parse(response.array[0])
+                var agents = []
+                for (var k = 0; k< resagent.orderOrigin.orderCandidates.length;k++){
+                     var agent = {}
+                     var inviterId = resagent.orderOrigin.orderCandidates[k].inviterId
+                     //TODO 通过 inviterId 查出 agent 名字填入
+                     agent['agentid'] = inviterId
+                     agent['name'] = "tdergouzi"
+                     agents.push(agent)
+                }
+                obj['agent'] = agents
+
             } catch (error) {
                 throw error
             }

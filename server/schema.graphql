@@ -4,26 +4,54 @@ type Query {
   searchptoforder(orderid:String):[Order]
   mytemplate: Template
   searchremark(orderid:String!,ptid:String!):Boolean
+  searchhash(txhash: String!): BcPayload
   searchhistory(ptid:String!):[Workhistory]
+  mywallet(skip:Int!,time:Int): Walletmsg
+}
+
+type Walletmsg{
+  adviseraddr:String
+  balance:Int
+}
+
+type BcPayload{
+  chainname:String
+  hotelcer: String
+  hoteladdr: String
+  hotelhrname: String
+  hotelname: String
+  advisercer: String
+  adviseraddr: String
+  advisername: String
+  adviserhrname: String
+  ptcer: String
+  ptaddr: String
+  ptname: String
+  contractaddress: String
+  blocknumber: Int
+  hash:String
+  occupation: String
+  datetime: Int
+  isrefused: Int
 }
 
 type Mutation {
   signup(email: String!, password: String!, name: String!,phone:String!): AuthPayload!
   login(email: String!, password: String!,jscode:String!): AuthPayload!
   changepassword(oldpassword: String!, newpassword: String!): CPwdPayload!
-  postorder(postorder:InputPostorder!):OrderPayload!
+  postorder(postorder:InputPostorder!,formid:String!):OrderPayload!
   createtemplate(type:String!,value:String): Boolean!
   deletetemplate(type:String!,id:String!):Boolean!
   modifytemplate(type:String!,id:String!,value:String!):Boolean!
   updatewechat:Boolean
-  modifyptoforder(orderid:String!,ptid:String!,ptstatus:Int!):Boolean!
+  modifyptoforder(orderid:String!,ptid:String!,ptstatus:Int!,formid:String):Boolean!
   editremark(orderid:String!,ptid:String!,startdate:Int,enddate:Int,realsalary:Int,isworked:Int!,type:Int!):Boolean
   closeorder(orderid: String!):OrderPayload
 }
 
 type Workhistory{
-occupation:String
-hotelname:String
+  occupation:String
+  hotelname:String
 }
 
 
@@ -33,42 +61,45 @@ type Template{
 }
 
 type Workcontent{
-id:ID
-workcontent : String
+  id:ID
+  workcontent : String
 }
 
 type Attention{
-id:ID
-attention : String
+  id:ID
+  attention : String
 }
 
 type Adviser{
-name:String!
-phone:String!
-companyname:String!
-introduction:String
+  name:String!
+  phone:String!
+  companyname:String!
+  introduction:String
 }
 
 type PtPayload{
-ptid:String
-name:String
-idnumber:String
-gender:Int
-wechatname:String
-phonenumber:String
-worktimes:Int
-height:Int
-weight:Int
-ptorderstate:Int
-remark:Remark
-workhours:Int
+  ptid:String
+  name:String
+  idnumber:String
+  gender:Int
+  wechatname:String
+  phonenumber:String
+  worktimes:Int
+  height:Int
+  weight:Int
+  ptorderstate:Int
+  remark:Remark
+  workhours:Int
+  hash:String
+  type:Int
+  inviterid:String
 }
 
 type Remark{
-startdate:Int
-enddate:Int
-realsalary:Int
-isworked:Int
+  startdate:Int
+  enddate:Int
+  realsalary:Int
+  isworked:Int
 }
 
 
@@ -83,8 +114,13 @@ femaleyet:Int!
 countyet:Int!
 postorder:Postorder
 pt:[PtPayload]
+agent:[AgentPayload]
 }
 
+type AgentPayload{
+  agentid: String
+  name: String
+}
 
 type Hotel{
 hotelid:String!

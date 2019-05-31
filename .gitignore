@@ -1,6 +1,9 @@
 # config.js
 config.js
 
+# ali token service secret
+certs
+
 # tmp files
 *.swp
 *.swo
