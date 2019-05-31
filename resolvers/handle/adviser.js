@@ -23,8 +23,8 @@ function queryPt(request) {
 }
 
 function queryAgentOfOrder(request) {
-    return new Promise((resolve,reject)=>{
-        client.queryAgentOfOrder(request,(err,data)=>{
+    return new Promise((resolve, reject) => {
+        client.queryAgentOfOrder(request, (err, data) => {
             if (err) reject(err);
             resolve(data)
         })
@@ -230,7 +230,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
 
                 if (type != null && type != undefined) {
                     request.setType(type)
-                    if (type == 3){
+                    if (type == 3) {
                         if (inviterid != null && inviterid != undefined) {
                             request.setInviterid(inviterid)
                         }
@@ -267,9 +267,9 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     pt['ptorderstate'] = response.array[0][k][7]
                     pt['type'] = response.array[0][k][8]
                     pt['inviterid'] = response.array[0][k][9]
-                    var contracts = await ctx.prismaHotel.contracts({where:{AND:[{orderid:res.orderOrigins[i].id},{ptid:ptid}]}})
-                    if (contracts[0] != undefined){
-                    pt['hash'] = contracts[0].hash
+                    var contracts = await ctx.prismaHotel.contracts({ where: { AND: [{ orderid: res.orderOrigins[i].id }, { ptid: ptid }] } })
+                    if (contracts[0] != undefined) {
+                        pt['hash'] = contracts[0].hash
                     }
                     var requestremark = new messages.QueryRemarkRequest()
                     requestremark.setOrderid(res.orderOrigins[i].id)
@@ -311,13 +311,21 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                 var response = await queryAgentOfOrder(request)
                 var resagent = JSON.parse(response.array[0])
                 var agents = []
-                for (var k = 0; k< resagent.orderOrigin.orderCandidates.length;k++){
-                     var agent = {}
-                     var inviterId = resagent.orderOrigin.orderCandidates[k].inviterId
-                     //TODO 通过 inviterId 查出 agent 名字填入
-                     agent['agentid'] = inviterId
-                     agent['name'] = "tdergouzi"
-                     agents.push(agent)
+                var inviterIds=[]
+                for (var k = 0; k < resagent.orderOrigin.orderCandidates.length; k++) {
+                    var inviterId = resagent.orderOrigin.orderCandidates[k].inviterId
+                    inviterIds.push(inviterId)
+                }
+                console.log(inviterIds)
+                var inviterIdList = Array.from(new Set(inviterIds))
+                console.log(inviterIdList)
+                for ( var m = 0 ; m < inviterIdList.length; m++){
+                    var agent = {}
+                    //TODO 通过 inviterId 查出 agent 名字填入
+                    agent['agentid'] = inviterIdList[m]
+                    var nicknames = await ctx.prismaAgent.personalmsgs({ where: { user: { id: inviterIdList[m] } } })
+                    agent['name'] = nicknames[0].nickname
+                    agents.push(agent)
                 }
                 obj['agent'] = agents
 

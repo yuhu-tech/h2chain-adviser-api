@@ -53,8 +53,8 @@ const auth = {
         }
       )
       //更新钱包信息
-      var identity = await QueryAccount(personalmsg.id)
-      var updateidentity = await ctx.prismaHr.updatePersonalmsg(
+      var identity = await QueryAccount(profiles[0].id)
+      var updateidentity = await ctx.prismaHr.updateProfile(
         {
           data: {
             ptadd: identity.identity

@@ -1,12 +1,12 @@
 type Query {
   me: User!
-  search(orderid:String,state:Int,datetime:Int,ptname:String):[Order]
+  search(orderid:String,state:Int,datetime:Int,ptname:String,type:Int,inviterid:String):[Order]
   searchptoforder(orderid:String):[Order]
   mytemplate: Template
   searchremark(orderid:String!,ptid:String!):Boolean
   searchhash(txhash: String!): BcPayload
   searchhistory(ptid:String!):[Workhistory]
-  mywallet(skip:Int!,time:Int): Walletmsg
+  mywallet(skip:Int,time:Int): Walletmsg
 }
 
 type Walletmsg{

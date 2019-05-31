@@ -3,6 +3,7 @@ const resolvers = require('../resolvers')
 const { prismaHotel } = require('../../h2chain-datamodel/hotel/src/generated/prisma-client')
 const { prismaHr } = require('../../h2chain-datamodel/hr/src/generated/prisma-client')
 const { prismaClient } = require('../../h2chain-datamodel/client/src/generated/prisma-client')
+const { prismaAgent } = require('../../h2chain-datamodel/agent/src/generated/prisma-client')
 const { timer } = require('../../h2chain-adviser-api/msg/access_token/schedule/timer')
 
 const server = new GraphQLServer({
@@ -12,7 +13,8 @@ const server = new GraphQLServer({
     ...req,
     prismaHotel,
     prismaHr,
-    prismaClient
+    prismaClient,
+    prismaAgent
   })
 })
 
