@@ -57,9 +57,9 @@ const auth = {
       var updateidentity = await ctx.prismaHr.updateProfile(
         {
           data: {
-            ptadd: identity.identity
+            adviseradd: identity.identity
           },
-          where: { id: personalmsg.id }
+          where: { id: profiles[0].id }
         }
       )
       console.log("更新钱包信息成功")
