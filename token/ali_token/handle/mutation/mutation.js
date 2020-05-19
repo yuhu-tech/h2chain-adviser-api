@@ -4,6 +4,22 @@ const fs = require('fs')
 const path = require('path')
 const abi = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../contracts/MyToken_sol_MyToken.abi'), String))
 const contractName = 'MyTokenv2.0.3'
+const urlShakeHand = 'https://rest.baas.alipay.com/api/contract/shakeHand';
+const urlCall = 'https://rest.baas.alipay.com/api/contract/chainCallForBiz';
+const request = require('request');
+let data = fs.readFileSync('./access.key')
+let privateKey = data.toString();
+let dateTime = Date.now();
+const crypto = require('crypto');
+
+let bizid = 'a00e36c5';
+let account = 'qinxi';
+let tenantid = 'OZHZQHJH';
+let mykmsKeyId = 'rDofu1uBOZHZQHJH1589174953066';
+let method = 'DEPOSIT';
+let accessId = 'nxcLnI0QOZHZQHJH';
+let gas = '10000000'
+
 // 使用新创建的key创建账户
 // to 
 
@@ -31,6 +47,34 @@ function CreateAccount(userId) {
     })
   })
 }
+
+// 2020 new chain
+function applyAccessToken() {
+  return new Promise((resolve, reject) => {
+    let data = accessId + dateTime;
+    let sign = crypto.createSign('RSA-SHA256');
+    sign.update(new Buffer.from(data, 'utf-8'));
+    let sigRes = sign.sign(privateKey, 'hex');
+    const options = {
+      url: urlShakeHand,
+      method: 'POST',
+      body: {
+        "accessId": accessId,
+        "time": dateTime,
+        "secret": sigRes
+      },
+      json: true
+    }
+    request(options, function (err, res, body) {
+      if (err) {
+        console.log(err);
+      } else {
+        resolve(body);
+      }
+    });
+  })
+}
+
 
 function Issue(to, value) {
   return new Promise((resolve, reject) => {
@@ -102,7 +146,8 @@ module.exports = {
   CreateAccount,
   Issue,
   Transfer,
-  NativeDepositData
+  NativeDepositData,
+  applyAccessToken
 }
 
 

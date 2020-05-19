@@ -16,7 +16,7 @@ const order = {
     var request = new messages.PostRequest('');
     request.setOrderid(args.postorder.orderid);    //发布订单的Id(可以通过订单创建接口得到)
     request.setIsfloat(args.postorder.isfloat);                              //雇佣人数是否浮动
-    request.setHourlysalary(args.postorder.salary);                        //时薪
+    request.setHourlysalary(Math.round(args.postorder.salary * 100));                        //时薪
     request.setWorkcontent(args.postorder.workcontent);             //工作内容
     request.setAttention(args.postorder.attention);                   //注意事项
     client.postOrder(request, function (err, response) {});
@@ -132,7 +132,7 @@ const order = {
       request.setPtid(args.ptid)                            // ptid          必传
       request.setStartdate(args.startdate)                         // 用工开始时间     
       request.setEnddate(args.enddate)                          // 用工结束时间
-      request.setRealsalary(args.realsalary)                           // 实际时薪
+      request.setRealsalary(Math.round(args.realsalary * 100))                           // 实际时薪
       request.setIsworked(args.isworked)                              // 是否参加了工作  必传  状态码： 1 - 表示参加工作  2 - 表示未参加
       request.setType(args.type)
       client.editRemark(request, function (err, response) { })

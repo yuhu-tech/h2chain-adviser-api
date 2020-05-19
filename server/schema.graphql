@@ -45,7 +45,7 @@ type Mutation {
 	modifytemplate(type: String!, id: String!, value: String!): Boolean!
 	updatewechat: Boolean
 	modifyptoforder(orderid: String!, ptid: String!, ptstatus: Int!, formid: String): Boolean!
-	editremark(orderid: String!, ptid: String!, startdate: Int, enddate: Int, realsalary: Int, isworked: Int!, type: Int!): Boolean
+	editremark(orderid: String!, ptid: String!, startdate: Int, enddate: Int, realsalary: Float, isworked: Int!, type: Int!): Boolean
 	closeorder(orderid: String!): OrderPayload
 }
 
@@ -98,7 +98,7 @@ type PtPayload {
 type Remark {
 	startdate: Int
 	enddate: Int
-	realsalary: Int
+	realsalary: Float
 	isworked: Int
 }
 
@@ -158,7 +158,7 @@ type Modifiedorder {
 
 input InputPostorder {
 	orderid: String!
-	salary: Int!
+	salary: Float!
 	workcontent: String
 	attention: String
 	isfloat: Int!
@@ -166,7 +166,7 @@ input InputPostorder {
 
 type Postorder {
 	orderid: String!
-	salary: Int
+	salary: Float
 	workcontent: String
 	attention: String
 	isfloat: Int

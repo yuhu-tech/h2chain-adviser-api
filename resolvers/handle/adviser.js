@@ -207,7 +207,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
             var postorder = {}
             if (res.orderOrigins[i].orderAdviserModifies.length != 0) {
                 postorder['orderid'] = res.orderOrigins[i].id
-                postorder['salary'] = res.orderOrigins[i].orderAdviserModifies[0].hourlySalary
+                postorder['salary'] = res.orderOrigins[i].orderAdviserModifies[0].hourlySalary / 100
                 postorder['workcontent'] = res.orderOrigins[i].orderAdviserModifies[0].workCount   // 这里有一个命名错误，是由于datamodel.graphql 里面字段错误造成的，后续会改
                 postorder['attention'] = res.orderOrigins[i].orderAdviserModifies[0].attention
                 postorder['isfloat'] = res.orderOrigins[i].orderAdviserModifies[0].isFloat
@@ -279,7 +279,7 @@ async function AdviserGetOrderList(ctx, adviserid, orderid, state, datetime, ptn
                     var remark = {}
                     if (resremark.orderCandidates[0].remark != undefined) {
                         remark['enddate'] = resremark.orderCandidates[0].remark.endDate
-                        remark['realsalary'] = resremark.orderCandidates[0].remark.realSalary
+                        remark['realsalary'] = resremark.orderCandidates[0].remark.realSalary / 100
                         remark['startdate'] = resremark.orderCandidates[0].remark.startDate
                         remark['isworked'] = resremark.orderCandidates[0].remark.isWorked
                         pt['remark'] = remark

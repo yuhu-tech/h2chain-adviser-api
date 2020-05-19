@@ -7,6 +7,7 @@ const config = require('../../conf/config')
 const client = new services.QueryOrderClient(config.localip, grpc.credentials.createInsecure());
 const { QueryTransaction } = require('../../token/ali_token/handle/query/query')
 const utils = require('../../token/ali_token/utils/utils')
+const mutation = require('../../token/ali_token/handle/mutation/mutation')
 
 const query = {
   async me(parent, args, ctx, info) {
@@ -73,14 +74,18 @@ const query = {
   },
 
   async searchhash(parent,args,ctx,info) {
-    var result  = await QueryTransaction(args.txhash)
-    var res = await utils.Hex2Str(result.originData)
+    var token = await mutation.applyAccessToken()
+    var result  = await QueryTransaction(args.txhash,token)
+    var buffered = new Buffer.from(JSON.parse(result.data).transactionDO.data, 'base64')
+    var originData = buffered.toString();
+    var res = await utils.Hex2Str(originData)
     var res = JSON.parse(res.str)
-    res['chainname'] = '蚂蚁区块链h2chain项目'
+    res['chainname'] = '小蜥灵工'
     var contracts = await ctx.prismaHotel.contracts({where:{hash:args.txhash}})
-    res['blocknumber'] = contracts[0].blocknumber
+    res['blocknumber'] = (JSON.parse(result.data)).blockNumber
     res['contractaddress'] = '0x3a758e6e367a783c7e845a91421b6def99972445bcf127bc258c145704953dc6'
     res['hash'] = args.txhash
+
     return res
   }
 }
